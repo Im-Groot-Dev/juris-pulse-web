@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
@@ -22,6 +23,7 @@ const Index = () => {
   const { isAuthenticated } = useAuth();
   const [query, setQuery] = useState("");
   const heroRef = useRef<HTMLDivElement>(null);
+  const [interactiveGlobe, setInteractiveGlobe] = useState(true);
 
   useEffect(() => {
     // Initialize sample data
@@ -92,9 +94,9 @@ const Index = () => {
 
   return (
     <PageLayout withoutPadding>
-      {/* Hero section with 3D globe */}
+      {/* Hero section with interactive 3D globe */}
       <section className="relative h-screen lawyermatch-hero">
-        <Globe />
+        <Globe interactive={interactiveGlobe} />
         
         <div className="container relative h-full mx-auto px-4 z-10 flex flex-col justify-center items-center">
           <div 
@@ -105,7 +107,7 @@ const Index = () => {
               <span className="text-gradient">AI-Powered</span> Legal Expertise<br />At Your Fingertips
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '100ms' }}>
-              Our advanced machine learning algorithms match you with the perfect lawyer for your specific legal needs, ensuring optimal outcomes for every case.
+              Legal Bharat's advanced algorithms match you with the perfect lawyer for your specific legal needs, ensuring optimal outcomes for every case.
             </p>
             
             <div 

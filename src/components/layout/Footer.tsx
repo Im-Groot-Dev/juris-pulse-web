@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -22,10 +21,10 @@ const Footer = () => {
               >
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
               </svg>
-              <span className="text-xl font-display">LegalMatch</span>
+              <span className="text-xl font-display">Legal Bharat</span>
             </Link>
             <p className="text-sm text-muted-foreground">
-              LegalMatch uses advanced machine learning algorithms to connect you with the perfect lawyer for your specific legal needs.
+              Legal Bharat uses advanced machine learning algorithms to connect you with the perfect lawyer for your specific legal needs.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-muted-foreground hover:text-accent transition-colors">
@@ -109,7 +108,7 @@ const Footer = () => {
         <div className="border-t border-border pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-sm text-muted-foreground mb-4 md:mb-0">
-              © {currentYear} LegalMatch. All rights reserved.
+              © {currentYear} Legal Bharat. All rights reserved.
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm">
               <Link to="/privacy-policy" className="text-muted-foreground hover:text-accent transition-colors">

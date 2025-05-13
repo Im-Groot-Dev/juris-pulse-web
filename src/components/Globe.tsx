@@ -5,11 +5,13 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 interface GlobeProps {
   className?: string;
+  interactive?: boolean;
 }
 
-const Globe = ({ className = "" }: GlobeProps) => {
+const Globe = ({ className = "", interactive = true }: GlobeProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const controlsRef = useRef<OrbitControls | null>(null);
   
   useEffect(() => {
     if (!containerRef.current) return;
@@ -43,10 +45,42 @@ const Globe = ({ className = "" }: GlobeProps) => {
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.rotateSpeed = 0.5;
-    controls.enableZoom = false;
-    controls.enablePan = false;
-    controls.autoRotate = true;
+    controls.enableZoom = interactive;
+    controls.enablePan = interactive;
+    controls.autoRotate = !interactive; // Only auto-rotate if not interactive
     controls.autoRotateSpeed = 0.2; // Slower rotation for more professional look
+    controlsRef.current = controls;
+    
+    // User interaction UI elements
+    if (interactive && containerRef.current) {
+      const uiContainer = document.createElement('div');
+      uiContainer.className = 'absolute bottom-4 right-4 flex flex-col space-y-2 bg-black/20 backdrop-blur-sm p-2 rounded-lg';
+      
+      // Reset view button
+      const resetButton = document.createElement('button');
+      resetButton.className = 'p-2 bg-white/10 hover:bg-white/20 rounded-md text-white text-sm';
+      resetButton.innerHTML = 'Reset View';
+      resetButton.addEventListener('click', () => {
+        if (controlsRef.current) {
+          camera.position.set(0, 0, 200);
+          controlsRef.current.reset();
+        }
+      });
+      
+      // Toggle rotation button
+      const toggleRotationButton = document.createElement('button');
+      toggleRotationButton.className = 'p-2 bg-white/10 hover:bg-white/20 rounded-md text-white text-sm';
+      toggleRotationButton.innerHTML = 'Toggle Rotation';
+      toggleRotationButton.addEventListener('click', () => {
+        if (controlsRef.current) {
+          controlsRef.current.autoRotate = !controlsRef.current.autoRotate;
+        }
+      });
+      
+      uiContainer.appendChild(resetButton);
+      uiContainer.appendChild(toggleRotationButton);
+      containerRef.current.appendChild(uiContainer);
+    }
     
     // Create Earth with higher detail
     const earthGeometry = new THREE.SphereGeometry(50, 64, 64); // Increased segments for smoother sphere
@@ -124,7 +158,7 @@ const Globe = ({ className = "" }: GlobeProps) => {
     directionalLight.position.set(5, 3, 5);
     scene.add(directionalLight);
     
-    // Add location markers
+    // Add location markers - India-focused locations
     const addLocationMarker = (lat: number, lng: number, size = 0.5, color = 0x1EAEDB) => {
       // Convert latitude and longitude to 3D coordinates
       const phi = (90 - lat) * (Math.PI / 180);
@@ -172,12 +206,14 @@ const Globe = ({ className = "" }: GlobeProps) => {
       { lat: 17.3850, lng: 78.4867, name: "Hyderabad" },
       { lat: 13.0827, lng: 80.2707, name: "Chennai" },
       { lat: 22.5726, lng: 88.3639, name: "Kolkata" },
-      // International locations
+      { lat: 26.9124, lng: 75.7873, name: "Jaipur" },
+      { lat: 23.0225, lng: 72.5714, name: "Ahmedabad" },
+      { lat: 25.5941, lng: 85.1376, name: "Patna" },
+      { lat: 30.7333, lng: 76.7794, name: "Chandigarh" },
+      // International connections
       { lat: 40.7128, lng: -74.0060, name: "New York" },
       { lat: 51.5074, lng: -0.1278, name: "London" },
       { lat: 35.6762, lng: 139.6503, name: "Tokyo" },
-      { lat: -33.8688, lng: 151.2093, name: "Sydney" },
-      { lat: 1.3521, lng: 103.8198, name: "Singapore" },
     ];
     
     const markers = locations.map(loc => 
@@ -237,16 +273,17 @@ const Globe = ({ className = "" }: GlobeProps) => {
       return tube;
     };
     
-    // Create key connections
+    // Create key connections focusing on India
     const connections = [
       createConnectionLine(28.6139, 77.2090, 19.0760, 72.8777), // Delhi to Mumbai
       createConnectionLine(19.0760, 72.8777, 12.9716, 77.5946), // Mumbai to Bangalore
       createConnectionLine(12.9716, 77.5946, 17.3850, 78.4867), // Bangalore to Hyderabad
       createConnectionLine(17.3850, 78.4867, 13.0827, 80.2707), // Hyderabad to Chennai
+      createConnectionLine(13.0827, 80.2707, 22.5726, 88.3639), // Chennai to Kolkata
+      createConnectionLine(22.5726, 88.3639, 28.6139, 77.2090), // Kolkata to Delhi
       // International connections
       createConnectionLine(28.6139, 77.2090, 40.7128, -74.0060), // Delhi to New York
       createConnectionLine(19.0760, 72.8777, 51.5074, -0.1278), // Mumbai to London
-      createConnectionLine(12.9716, 77.5946, 1.3521, 103.8198), // Bangalore to Singapore
     ];
     
     // Animation for markers
@@ -265,13 +302,58 @@ const Globe = ({ className = "" }: GlobeProps) => {
     const animateClouds = () => {
       clouds.rotation.y += 0.0002;
     };
+
+    // If interactive, add tooltip functionality
+    let tooltip: HTMLDivElement | null = null;
+    
+    if (interactive && containerRef.current) {
+      tooltip = document.createElement('div');
+      tooltip.className = 'absolute hidden bg-black/70 text-white p-2 rounded pointer-events-none';
+      containerRef.current.appendChild(tooltip);
+      
+      // Raycast to detect mouse over markers
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+      
+      const onMouseMove = (event: MouseEvent) => {
+        if (!containerRef.current || !tooltip) return;
+        
+        // Calculate mouse position in normalized device coordinates
+        const rect = containerRef.current.getBoundingClientRect();
+        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        
+        // Update raycaster
+        raycaster.setFromCamera(mouse, camera);
+        
+        // Check for intersections with markers
+        const markerObjects = markers.map(m => m.marker);
+        const intersects = raycaster.intersectObjects(markerObjects);
+        
+        if (intersects.length > 0) {
+          const index = markerObjects.indexOf(intersects[0].object as THREE.Mesh);
+          if (index !== -1) {
+            tooltip.innerHTML = locations[index].name;
+            tooltip.style.left = `${event.clientX - rect.left + 10}px`;
+            tooltip.style.top = `${event.clientY - rect.top + 10}px`;
+            tooltip.style.display = 'block';
+          }
+        } else {
+          tooltip.style.display = 'none';
+        }
+      };
+      
+      containerRef.current.addEventListener('mousemove', onMouseMove);
+    }
     
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
       
       // Update controls
-      controls.update();
+      if (controlsRef.current) {
+        controlsRef.current.update();
+      }
       
       // Animate elements
       animateMarkers();
@@ -283,12 +365,39 @@ const Globe = ({ className = "" }: GlobeProps) => {
     
     // Handle window resize
     const onWindowResize = () => {
+      if (!containerRef.current) return;
+      
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
     
     window.addEventListener("resize", onWindowResize, false);
+    
+    // Instructions overlay for interaction if interactive
+    if (interactive && containerRef.current) {
+      const instructions = document.createElement('div');
+      instructions.className = 'absolute top-4 left-4 bg-black/40 text-white p-3 rounded-lg backdrop-blur-sm max-w-sm text-sm';
+      instructions.innerHTML = `
+        <p class="mb-2"><strong>Interact with the Globe:</strong></p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>Click and drag to rotate the globe</li>
+          <li>Scroll to zoom in/out</li>
+          <li>Hover over highlighted cities to see their names</li>
+        </ul>
+      `;
+      
+      // Add fade-out after 8 seconds
+      setTimeout(() => {
+        instructions.style.transition = 'opacity 1s ease-out';
+        instructions.style.opacity = '0';
+        setTimeout(() => {
+          instructions.remove();
+        }, 1000);
+      }, 8000);
+      
+      containerRef.current.appendChild(instructions);
+    }
     
     // Start animation
     animate();
@@ -298,7 +407,23 @@ const Globe = ({ className = "" }: GlobeProps) => {
       window.removeEventListener("resize", onWindowResize);
       
       if (containerRef.current && rendererRef.current) {
+        // Remove event listeners if interactive
+        if (interactive) {
+          const element = rendererRef.current.domElement;
+          element.removeEventListener('mousemove', onMouseMove as EventListener);
+        }
+        
         containerRef.current.removeChild(rendererRef.current.domElement);
+        
+        // Remove UI elements
+        const elementsToRemove = containerRef.current.querySelectorAll('div');
+        elementsToRemove.forEach(el => {
+          try {
+            containerRef.current?.removeChild(el);
+          } catch(e) {
+            // Ignore failures
+          }
+        });
       }
       
       // Dispose of resources
@@ -313,9 +438,9 @@ const Globe = ({ className = "" }: GlobeProps) => {
       
       scene.clear();
     };
-  }, []);
+  }, [interactive]);
   
-  return <div ref={containerRef} className={`globe-container ${className}`} />;
+  return <div ref={containerRef} className={`globe-container relative ${className}`} />;
 };
 
 export default Globe;

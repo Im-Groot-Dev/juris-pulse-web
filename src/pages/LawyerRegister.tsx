@@ -123,6 +123,7 @@ const LawyerRegister = () => {
         total_cases: parseInt(formData.total_cases),
         cases_won: parseInt(formData.cases_won),
         fees_per_hearing: parseInt(formData.fees_per_hearing),
+        role: "lawyer" as const, // Explicitly typed as "lawyer"
       };
       
       await registerLawyer(submissionData);

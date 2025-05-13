@@ -1,13 +1,14 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "sonner";
 
-interface User {
+export type Role = "user" | "lawyer";
+
+export interface User {
   id: string;
   name: string;
   email: string;
-  role: "user" | "lawyer";
-  profileImage?: string;
+  role: Role;
+  profileImage: string;
 }
 
 interface AuthContextType {

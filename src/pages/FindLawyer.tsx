@@ -24,9 +24,9 @@ import {
 import { toast } from "sonner";
 import { 
   getLawyerData, 
-  LawyerData, 
   filterLawyers,
-  recommendLawyers
+  recommendLawyers,
+  LawyerData
 } from "@/utils/machineLearningSim";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -213,7 +213,7 @@ const FindLawyer = () => {
                         <SelectValue placeholder="All domains" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All domains</SelectItem>
+                        <SelectItem value="all">All domains</SelectItem>
                         {DOMAINS.map((d) => (
                           <SelectItem key={d} value={d}>
                             {d}
@@ -232,7 +232,7 @@ const FindLawyer = () => {
                         <SelectValue placeholder="All cities" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All cities</SelectItem>
+                        <SelectItem value="all">All cities</SelectItem>
                         {CITIES.map((c) => (
                           <SelectItem key={c} value={c}>
                             {c}
@@ -251,7 +251,7 @@ const FindLawyer = () => {
                         <SelectValue placeholder="Any gender" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Any gender</SelectItem>
+                        <SelectItem value="any">Any gender</SelectItem>
                         <SelectItem value="Male">Male</SelectItem>
                         <SelectItem value="Female">Female</SelectItem>
                       </SelectContent>

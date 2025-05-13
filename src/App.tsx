@@ -20,6 +20,8 @@ import LawyerDashboard from "./pages/LawyerDashboard";
 import FindLawyer from "./pages/FindLawyer";
 import Company from "./pages/Company";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ViewLawyerProfile from "./pages/ViewLawyerProfile";
+import AppointmentPage from "./pages/AppointmentPage";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +43,12 @@ const App = () => (
             <Route path="/resources" element={<Resources />} />
             <Route path="/company" element={<Company />} />
             <Route path="/find-lawyer" element={<FindLawyer />} />
+            <Route path="/lawyer/:id" element={<ViewLawyerProfile />} />
+            <Route path="/appointment/:lawyerId" element={
+              <ProtectedRoute role="user">
+                <AppointmentPage />
+              </ProtectedRoute>
+            } />
             <Route path="/user-dashboard" element={
               <ProtectedRoute role="user">
                 <UserDashboard />

@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
@@ -16,9 +15,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { initializeSampleData, DOMAINS } from "@/utils/machineLearningSim";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [query, setQuery] = useState("");
   const heroRef = useRef<HTMLDivElement>(null);
 
@@ -126,14 +127,17 @@ const Index = () => {
                 >
                   Find Your Legal Match
                 </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="w-full bg-secondary/70 backdrop-blur-md"
-                  onClick={() => navigate("/register")}
-                >
-                  Register Now
-                </Button>
+                
+                {!isAuthenticated && (
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-full bg-secondary/70 backdrop-blur-md"
+                    onClick={() => navigate("/register")}
+                  >
+                    Register Now
+                  </Button>
+                )}
               </div>
             </div>
           </div>
@@ -224,9 +228,15 @@ const Index = () => {
               Join thousands of clients who have found their ideal legal representation through our advanced AI-powered platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="px-8" onClick={() => navigate("/register")}>
-                Sign Up Now
-              </Button>
+              {!isAuthenticated ? (
+                <Button size="lg" className="px-8" onClick={() => navigate("/register")}>
+                  Sign Up Now
+                </Button>
+              ) : (
+                <Button size="lg" className="px-8" onClick={() => navigate("/user-dashboard")}>
+                  Go to Dashboard
+                </Button>
+              )}
               <Button size="lg" variant="outline" className="px-8" onClick={() => navigate("/find-lawyer")}>
                 Search Lawyers
               </Button>

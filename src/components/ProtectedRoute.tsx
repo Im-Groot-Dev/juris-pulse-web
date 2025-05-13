@@ -1,6 +1,7 @@
 
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { toast } from "sonner";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -9,6 +10,7 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ children, role }: ProtectedRouteProps) => {
   const { isAuthenticated, user, loading } = useAuth();
+  const location = useLocation();
 
   // Show loading state
   if (loading) {
@@ -19,13 +21,15 @@ const ProtectedRoute = ({ children, role }: ProtectedRouteProps) => {
     );
   }
 
-  // Not authenticated
+  // Not authenticated - redirect to login
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    toast.error("Please log in to access this page");
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
   // Role check if specified
   if (role && user?.role !== role) {
+    toast.error(`This area is restricted to ${role}s only`);
     return <Navigate to="/" replace />;
   }
 

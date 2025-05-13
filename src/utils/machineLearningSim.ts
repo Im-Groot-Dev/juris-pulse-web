@@ -124,6 +124,8 @@ export const SAMPLE_LAWYERS = [
 export interface LawyerData {
   id: string;
   name: string;
+  first_name: string;  // Changed from optional to required
+  last_name: string;   // Changed from optional to required
   profileImage?: string;
   email: string;
   domain: string;
@@ -137,9 +139,8 @@ export interface LawyerData {
   contact_number?: string;
   law_school?: string;
   bar_association?: string;
-  gender?: string;
-  first_name?: string;
-  last_name?: string;
+  gender: string;      // Changed from optional to required
+  age?: number;
 }
 
 // Function to initialize sample data in localStorage
@@ -209,7 +210,7 @@ export const getLawyerData = (): LawyerData[] => {
           contact_number: parsedLawyer.contact_number,
           law_school: parsedLawyer.law_school,
           bar_association: parsedLawyer.bar_association,
-          gender: parsedLawyer.gender,
+          gender: parsedLawyer.gender || 'Not specified', // Ensure gender is always defined
           first_name: parsedLawyer.first_name,
           last_name: parsedLawyer.last_name
         });
@@ -242,14 +243,14 @@ export const getLawyerData = (): LawyerData[] => {
             experience: parsedLawyer.experience,
             fees_per_hearing: parsedLawyer.fees_per_hearing,
             rating: parsedLawyer.rating || 4.5,
-            cases_won: parsedLawyer.cases_won,
-            total_cases: parsedLawyer.total_cases,
+            cases_won: parsedLawyer.cases_won || 0,
+            total_cases: parsedLawyer.total_cases || 0,
             city: parsedLawyer.city,
             bio: parsedLawyer.bio || `${parsedLawyer.first_name} is a specialized ${parsedLawyer.domain} lawyer with ${parsedLawyer.experience} years of experience.`,
             contact_number: parsedLawyer.contact_number,
             law_school: parsedLawyer.law_school,
             bar_association: parsedLawyer.bar_association,
-            gender: parsedLawyer.gender,
+            gender: parsedLawyer.gender || 'Not specified', // Ensure gender is always defined
             first_name: parsedLawyer.first_name,
             last_name: parsedLawyer.last_name
           });

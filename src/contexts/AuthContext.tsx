@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { User, Role } from '../types/user';
 import { toast } from "sonner";
@@ -35,7 +36,6 @@ interface AuthContextType {
   getUserAppointments: () => AppointmentData[];
   getSavedLawyers: () => string[];
   hasScheduledAppointment: (lawyerId: string) => boolean;
-  updateUserProfile: (userData: Partial<User>) => void;
 }
 
 export interface LawyerRegistrationData {
@@ -94,8 +94,7 @@ const AuthContext = createContext<AuthContextType>({
   unsaveLawyer: () => {},
   getUserAppointments: () => [],
   getSavedLawyers: () => [],
-  hasScheduledAppointment: () => false,
-  updateUserProfile: () => {}
+  hasScheduledAppointment: () => false
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -476,27 +475,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     );
   };
 
-  const updateUserProfile = (userData: Partial<User>) => {
-    if (!user) {
-      toast.error("You must be logged in to update your profile");
-      return;
-    }
-    
-    try {
-      // Update user data
-      const updatedUser = { ...user, ...userData };
-      setUser(updatedUser);
-      
-      // Save to localStorage
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-      
-      toast.success("Profile updated successfully");
-    } catch (error) {
-      console.error("Failed to update profile:", error);
-      toast.error("Failed to update profile");
-    }
-  };
-
   return (
     <AuthContext.Provider value={{ 
       user, 
@@ -513,8 +491,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       unsaveLawyer,
       getUserAppointments,
       getSavedLawyers,
-      hasScheduledAppointment,
-      updateUserProfile
+      hasScheduledAppointment
     }}>
       {children}
     </AuthContext.Provider>

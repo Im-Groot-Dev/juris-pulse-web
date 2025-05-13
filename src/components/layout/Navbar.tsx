@@ -71,7 +71,7 @@ const Navbar = () => {
             >
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
             </svg>
-            <span className="text-xl font-display">Legal Bharat</span>
+            <span className="text-xl font-display">LegalMatch</span>
           </Link>
 
           <nav className="hidden md:flex items-center space-x-1 text-sm">

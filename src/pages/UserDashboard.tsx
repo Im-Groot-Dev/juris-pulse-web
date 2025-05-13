@@ -9,42 +9,11 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import UserAppointments from "@/components/UserAppointments";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
 
 const UserDashboard = () => {
-  const { user, userProfile, updateUserProfile } = useAuth();
+  const { user, userProfile } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("profile");
-  const { toast } = useToast();
-  
-  // State for profile editing
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    name: user?.name || "",
-    email: user?.email || "",
-    phone: user?.phone || "",
-    address: user?.address || "",
-  });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSaveProfile = () => {
-    updateUserProfile({
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
-      address: formData.address
-    });
-    setIsEditing(false);
-  };
   
   return (
     <PageLayout>
@@ -105,7 +74,7 @@ const UserDashboard = () => {
             transition={{ duration: 0.5 }}
           >
             <div className="mb-6">
-              <h1 className="text-3xl font-bold">Welcome to Legal Bharat, {user?.name}</h1>
+              <h1 className="text-3xl font-bold">Welcome, {user?.name}</h1>
               <p className="text-muted-foreground">
                 Manage your legal appointments and saved lawyers
               </p>
@@ -121,97 +90,33 @@ const UserDashboard = () => {
               
               <TabsContent value="profile">
                 <Card>
-                  <CardHeader className="flex flex-row items-center justify-between">
-                    <div>
-                      <CardTitle>Your Profile</CardTitle>
-                      <CardDescription>View and manage your personal information</CardDescription>
-                    </div>
-                    <Button 
-                      variant={isEditing ? "outline" : "default"}
-                      onClick={() => setIsEditing(!isEditing)}
-                    >
-                      {isEditing ? "Cancel" : "Edit Profile"}
-                    </Button>
+                  <CardHeader>
+                    <CardTitle>Your Profile</CardTitle>
+                    <CardDescription>View and manage your personal information</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    {isEditing ? (
-                      <div className="space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="name">Full Name</Label>
-                            <Input 
-                              id="name" 
-                              name="name" 
-                              value={formData.name} 
-                              onChange={handleInputChange} 
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input 
-                              id="email" 
-                              name="email" 
-                              value={formData.email} 
-                              onChange={handleInputChange} 
-                              type="email"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="phone">Phone Number</Label>
-                            <Input 
-                              id="phone" 
-                              name="phone" 
-                              value={formData.phone} 
-                              onChange={handleInputChange} 
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="address">Address</Label>
-                            <Input 
-                              id="address" 
-                              name="address" 
-                              value={formData.address} 
-                              onChange={handleInputChange} 
-                            />
-                          </div>
-                        </div>
-                        
-                        <div className="pt-4 flex justify-end">
-                          <Button onClick={handleSaveProfile}>Save Changes</Button>
-                        </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Full Name</p>
+                        <p>{user?.name}</p>
                       </div>
-                    ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground">Full Name</p>
-                          <p>{user?.name}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground">Email</p>
-                          <p>{user?.email}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground">Member Since</p>
-                          <p>{new Date().toLocaleDateString()}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground">Account Type</p>
-                          <p className="capitalize">{user?.role}</p>
-                        </div>
-                        {user?.phone && (
-                          <div>
-                            <p className="text-sm font-medium text-muted-foreground">Phone</p>
-                            <p>{user.phone}</p>
-                          </div>
-                        )}
-                        {user?.address && (
-                          <div>
-                            <p className="text-sm font-medium text-muted-foreground">Address</p>
-                            <p>{user.address}</p>
-                          </div>
-                        )}
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Email</p>
+                        <p>{user?.email}</p>
                       </div>
-                    )}
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Member Since</p>
+                        <p>{new Date().toLocaleDateString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Account Type</p>
+                        <p className="capitalize">{user?.role}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="pt-4 flex justify-end">
+                      <Button disabled>Edit Profile</Button>
+                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -266,28 +171,19 @@ const UserDashboard = () => {
                     <div className="space-y-2">
                       <h3 className="text-lg font-medium">Password</h3>
                       <p className="text-sm text-muted-foreground">Update your password to keep your account secure</p>
-                      <Button onClick={() => toast({
-                        title: "Coming Soon",
-                        description: "This feature will be available soon."
-                      })}>Change Password</Button>
+                      <Button disabled>Change Password</Button>
                     </div>
                     
                     <div className="space-y-2">
                       <h3 className="text-lg font-medium">Notifications</h3>
                       <p className="text-sm text-muted-foreground">Manage your notification preferences</p>
-                      <Button onClick={() => toast({
-                        title: "Coming Soon",
-                        description: "This feature will be available soon."
-                      })}>Manage Notifications</Button>
+                      <Button disabled>Manage Notifications</Button>
                     </div>
                     
                     <div className="space-y-2">
                       <h3 className="text-lg font-medium">Privacy</h3>
                       <p className="text-sm text-muted-foreground">Control your privacy settings</p>
-                      <Button onClick={() => toast({
-                        title: "Coming Soon",
-                        description: "This feature will be available soon."
-                      })}>Privacy Settings</Button>
+                      <Button disabled>Privacy Settings</Button>
                     </div>
                   </CardContent>
                 </Card>

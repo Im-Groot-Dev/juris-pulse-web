@@ -1,78 +1,64 @@
+// This file simulates machine learning functionalities for lawyer segmentation
+// Constants shared by components
 
-// This file simulates machine learning for lawyer segmentation and recommendation
-// In a real app, this would be handled by a backend with actual ML models
-
-export type LawyerData = {
-  id: string;
-  first_name: string;
-  last_name: string;
-  age: number;
-  gender: string;
-  address?: string;
-  contact_number?: string;
-  experience: number;
-  total_cases: number;
-  cases_won: number;
-  domain: string;
-  fees_per_hearing: number;
-  rating: number;
-  city: string;
-  bar_association: string;
-  law_school: string;
-  profileImage?: string;
-  email?: string;
-  password?: string;
-};
-
-const DOMAINS = [
-  "Corporate Law",
+// Export constants that were previously only defined locally
+export const DOMAINS = [
   "Criminal Law",
   "Family Law",
-  "Civil Law",
+  "Corporate Law",
   "Intellectual Property",
-  "Real Estate Law",
+  "Real Estate",
   "Tax Law",
-  "Constitutional Law",
-  "Environmental Law",
   "Immigration Law",
+  "Employment Law",
+  "Environmental Law",
+  "Constitutional Law",
+  "Consumer Protection",
+  "Bankruptcy Law",
 ];
 
-const CITIES = [
+export const LAW_SCHOOLS = [
+  "National Law School of India University, Bangalore",
+  "NALSAR University of Law, Hyderabad",
+  "The West Bengal National University of Juridical Sciences, Kolkata",
+  "National Law University, Delhi",
+  "ILS Law College, Pune",
+  "Faculty of Law, Delhi University, Delhi",
+  "Symbiosis Law School, Pune",
+  "Government Law College, Mumbai",
+  "Jindal Global Law School, Sonipat",
+  "Faculty of Law, Aligarh Muslim University",
+];
+
+export const BAR_ASSOCIATIONS = [
+  "Supreme Court Bar Association",
+  "Bar Council of India",
+  "Delhi Bar Association",
+  "Bombay Bar Association",
+  "Madras Bar Association",
+  "Calcutta Bar Association",
+  "Karnataka State Bar Council",
+  "Punjab Bar Council",
+  "Gujarat Bar Council",
+  "Rajasthan Bar Council",
+];
+
+export const CITIES = [
   "Mumbai",
   "Delhi",
   "Bangalore",
   "Hyderabad",
   "Chennai",
   "Kolkata",
-  "Ahmedabad",
   "Pune",
+  "Ahmedabad",
   "Jaipur",
-  "Lucknow",
   "Chandigarh",
+  "Lucknow",
+  "Guwahati",
   "Kochi",
-];
-
-const LAW_SCHOOLS = [
-  "National Law School of India University, Bangalore",
-  "NALSAR University of Law, Hyderabad",
-  "Faculty of Law, Delhi University",
-  "ILS Law College, Pune",
-  "Symbiosis Law School, Pune",
-  "Government Law College, Mumbai",
-  "Faculty of Law, Banaras Hindu University",
-  "Jindal Global Law School, Sonipat",
-  "Amity Law School, Delhi",
-  "Faculty of Law, Aligarh Muslim University",
-];
-
-const BAR_ASSOCIATIONS = [
-  "Bar Council of India",
-  "Delhi Bar Association",
-  "Mumbai Bar Association",
-  "Bar Association of India",
-  "Madras Bar Association",
-  "Calcutta High Court Bar Association",
-  "Supreme Court Bar Association",
+  "Bhopal",
+  "Nagpur",
 ];
 
 // Generate random data for demonstration purposes

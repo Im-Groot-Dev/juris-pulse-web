@@ -135,6 +135,13 @@ export const getLawyerData = (): LawyerData[] => {
   return lawyerDatabase;
 };
 
+// Add the missing initializeSampleData function
+export const initializeSampleData = (): void => {
+  if (lawyerDatabase.length === 0) {
+    lawyerDatabase = generateLawyerData();
+  }
+};
+
 // Filter lawyers based on criteria
 export const filterLawyers = (
   lawyers: LawyerData[],

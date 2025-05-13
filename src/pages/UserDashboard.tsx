@@ -37,14 +37,13 @@ const UserDashboard = () => {
   };
 
   const handleSaveProfile = () => {
-    // Here you would typically update the user profile through an API call
-    // For now we'll just show a toast notification
-    toast({
-      title: "Profile Updated",
-      description: "Your profile has been updated successfully.",
+    updateUserProfile({
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      address: formData.address
     });
     setIsEditing(false);
-    // In a real application, you would use updateUserProfile(formData) here
   };
   
   return (

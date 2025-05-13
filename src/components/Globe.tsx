@@ -315,7 +315,7 @@ const Globe = ({ className = "", interactive = true }: GlobeProps) => {
       const raycaster = new THREE.Raycaster();
       const mouse = new THREE.Vector2();
       
-      const onMouseMove = (event: MouseEvent) => {
+      const handleMouseMove = (event: MouseEvent) => {
         if (!containerRef.current || !tooltip) return;
         
         // Calculate mouse position in normalized device coordinates
@@ -343,7 +343,7 @@ const Globe = ({ className = "", interactive = true }: GlobeProps) => {
         }
       };
       
-      containerRef.current.addEventListener('mousemove', onMouseMove);
+      containerRef.current.addEventListener('mousemove', handleMouseMove);
     }
     
     // Animation loop
@@ -408,9 +408,9 @@ const Globe = ({ className = "", interactive = true }: GlobeProps) => {
       
       if (containerRef.current && rendererRef.current) {
         // Remove event listeners if interactive
-        if (interactive) {
+        if (interactive && containerRef.current) {
           const element = rendererRef.current.domElement;
-          element.removeEventListener('mousemove', onMouseMove as EventListener);
+          element.removeEventListener('mousemove', handleMouseMove);
         }
         
         containerRef.current.removeChild(rendererRef.current.domElement);

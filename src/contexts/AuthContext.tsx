@@ -7,7 +7,30 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   register: (name: string, email: string, password: string, role: Role) => Promise<void>;
+  registerLawyer: (data: LawyerRegistrationData) => Promise<void>;
   isAuthenticated: boolean;
+  loading: boolean;
+}
+
+export interface LawyerRegistrationData {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  age: number;
+  gender: string;
+  contact_number: string;
+  city: string;
+  address: string;
+  experience: number;
+  domain: string;
+  law_school: string;
+  bar_association: string;
+  total_cases: number;
+  cases_won: number;
+  fees_per_hearing: number;
+  rating?: number;
+  role: Role;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -15,7 +38,9 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => {},
   logout: () => {},
   register: async () => {},
-  isAuthenticated: false
+  registerLawyer: async () => {},
+  isAuthenticated: false,
+  loading: false
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -26,6 +51,7 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   // Check for existing user session in localStorage on mount
   React.useEffect(() => {
@@ -38,31 +64,38 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         localStorage.removeItem('user');
       }
     }
+    setLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
     // In a real app, this would validate credentials against a backend
     // For demo purposes, we'll just simulate a successful login
     
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    setLoading(true);
     
-    // Check if it's a user or lawyer login based on email
-    let role: Role = "user";
-    if (email.includes('lawyer')) {
-      role = "lawyer";
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Check if it's a user or lawyer login based on email
+      let role: Role = "user";
+      if (email.includes('lawyer')) {
+        role = "lawyer";
+      }
+      
+      const mockUser: User = {
+        id: Math.random().toString(36).substr(2, 9),
+        name: email.split('@')[0],
+        email,
+        role,
+        profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${email}`,
+      };
+      
+      setUser(mockUser);
+      localStorage.setItem('user', JSON.stringify(mockUser));
+    } finally {
+      setLoading(false);
     }
-    
-    const mockUser: User = {
-      id: Math.random().toString(36).substr(2, 9),
-      name: email.split('@')[0],
-      email,
-      role,
-      profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${email}`,
-    };
-    
-    setUser(mockUser);
-    localStorage.setItem('user', JSON.stringify(mockUser));
   };
 
   const logout = () => {
@@ -70,23 +103,54 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.removeItem('user');
   };
 
-  const register = async (name: string, email: string, password: string, role: Role) => {
+  const register = async (name: string, email: string, password: string, role: Role = "user") => {
     // In a real app, this would send registration data to a backend
     // For demo purposes, we'll just simulate a successful registration
     
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    setLoading(true);
     
-    const mockUser: User = {
-      id: Math.random().toString(36).substr(2, 9),
-      name,
-      email,
-      role,
-      profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${name}${email}`,
-    };
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const mockUser: User = {
+        id: Math.random().toString(36).substr(2, 9),
+        name,
+        email,
+        role,
+        profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${name}${email}`,
+      };
+      
+      setUser(mockUser);
+      localStorage.setItem('user', JSON.stringify(mockUser));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const registerLawyer = async (data: LawyerRegistrationData) => {
+    setLoading(true);
     
-    setUser(mockUser);
-    localStorage.setItem('user', JSON.stringify(mockUser));
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const mockUser: User = {
+        id: Math.random().toString(36).substr(2, 9),
+        name: `${data.first_name} ${data.last_name}`,
+        email: data.email,
+        role: "lawyer",
+        profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${data.first_name}${data.email}`,
+      };
+      
+      setUser(mockUser);
+      localStorage.setItem('user', JSON.stringify(mockUser));
+      
+      // In a real app, we would save all the lawyer data to the database
+      console.log("Lawyer registered with data:", data);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -95,7 +159,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       login, 
       logout, 
       register,
-      isAuthenticated: !!user 
+      registerLawyer,
+      isAuthenticated: !!user,
+      loading 
     }}>
       {children}
     </AuthContext.Provider>

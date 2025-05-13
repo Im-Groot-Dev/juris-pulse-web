@@ -33,7 +33,7 @@ const Register = () => {
     
     try {
       setIsLoading(true);
-      await register(name, email, password);
+      await register(name, email, password, "user");
       navigate("/");
     } catch (error) {
       console.error("Registration failed:", error);

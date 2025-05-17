@@ -1,4 +1,3 @@
-
 // This file simulates machine learning data for matching lawyers with clients
 
 // Define legal domains
@@ -340,11 +339,9 @@ function generateLawyers() {
         total_cases: totalCases,
         city: city,
         law_school: lawSchool,
-        bar_association: barAssociation
+        bar_association: barAssociation,
+        contact_number: generateContactNumber()
       };
-
-      // Add a contact number
-      lawyerData.contact_number = generateContactNumber();
       
       lawyers.push(lawyerData);
     }

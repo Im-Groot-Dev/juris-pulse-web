@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
@@ -462,7 +461,22 @@ const FindLawyer = () => {
                     className="animate-scale-in" 
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
-                    <LawyerCard lawyer={lawyer} />
+                    <LawyerCard lawyer={{
+                      id: lawyer.id,
+                      first_name: lawyer.first_name,
+                      last_name: lawyer.last_name,
+                      experience: lawyer.experience,
+                      gender: lawyer.gender || "",
+                      domain: lawyer.domain,
+                      fees_per_hearing: lawyer.fees_per_hearing,
+                      rating: lawyer.rating,
+                      city: lawyer.city,
+                      law_school: lawyer.law_school,
+                      profileImage: lawyer.profileImage,
+                      cases_won: lawyer.cases_won,
+                      total_cases: lawyer.total_cases,
+                      contact_number: lawyer.contact_number
+                    }} />
                   </div>
                 ))}
               </div>

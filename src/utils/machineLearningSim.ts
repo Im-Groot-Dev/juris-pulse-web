@@ -1,4 +1,3 @@
-
 // This file simulates machine learning data for matching lawyers with clients
 
 // Define legal domains
@@ -241,8 +240,8 @@ export interface LawyerData {
   law_school?: string;
   bar_association?: string;
   gender?: string;
-  first_name?: string;
-  last_name?: string;
+  first_name: string;
+  last_name: string;
 }
 
 // Function to initialize sample data in localStorage

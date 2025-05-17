@@ -75,7 +75,7 @@ const ViewLawyerProfile = () => {
           setLawyer({
             id: sampleLawyer.id,
             name: `${sampleLawyer.first_name} ${sampleLawyer.last_name}`,
-            profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${sampleLawyer.first_name}`,
+            profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${sampleLawyer.first_name}${sampleLawyer.id}`,
             email: sampleLawyer.email,
             domain: sampleLawyer.domain,
             experience: sampleLawyer.experience,
@@ -84,8 +84,8 @@ const ViewLawyerProfile = () => {
             cases_won: sampleLawyer.cases_won,
             total_cases: sampleLawyer.total_cases,
             city: sampleLawyer.city,
-            bio: `${sampleLawyer.first_name} is a specialized ${sampleLawyer.domain} lawyer with ${sampleLawyer.experience} years of experience. They have successfully handled ${sampleLawyer.cases_won} cases out of ${sampleLawyer.total_cases} total cases.`,
-            contact_number: "+91 9876543210",
+            bio: `${sampleLawyer.first_name} ${sampleLawyer.last_name} is a specialized ${sampleLawyer.domain} lawyer with ${sampleLawyer.experience} years of experience. They have successfully handled ${sampleLawyer.cases_won} cases out of ${sampleLawyer.total_cases} total cases and are a member of the ${sampleLawyer.bar_association}.`,
+            contact_number: `+91 ${9800000000 + parseInt(sampleLawyer.id.replace('lawyer', ''))}`,
             law_school: sampleLawyer.law_school,
             bar_association: sampleLawyer.bar_association
           });
@@ -169,7 +169,7 @@ const ViewLawyerProfile = () => {
           </Card>
         )}
         
-        <LawyerProfile lawyer={lawyer} />
+        {lawyer && <LawyerProfile lawyer={lawyer} />}
       </div>
     </PageLayout>
   );

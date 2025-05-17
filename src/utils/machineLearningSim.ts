@@ -70,6 +70,7 @@ export const CITIES = [
 
 // Sample lawyer data for demonstration
 export const SAMPLE_LAWYERS = [
+  // Original sample lawyers
   {
     id: "lawyer1",
     first_name: "Rajesh",
@@ -118,7 +119,102 @@ export const SAMPLE_LAWYERS = [
     law_school: "ILS Law College, Pune",
     bar_association: "Karnataka State Bar Council",
   },
+  // Generating more lawyers for each domain
+  ...generateLawyers()
 ];
+
+// Function to generate additional lawyers
+function generateLawyers() {
+  const lawyers = [];
+  let idCounter = 4; // Start after the original 3 lawyers
+  
+  // List of first names
+  const maleFirstNames = ["Amit", "Vikram", "Suresh", "Rohit", "Rahul", "Sanjay", "Deepak", "Ajay", "Vijay", "Nitin", 
+    "Prakash", "Anil", "Sunil", "Rakesh", "Vivek", "Mahesh", "Dinesh", "Rajiv", "Manoj", "Ashok", "Pankaj", "Vinod", 
+    "Manish", "Ravi", "Jayesh", "Bharat", "Sachin", "Surya", "Aditya", "Karan", "Siddharth", "Rohan", "Neeraj", "Tushar", "Arun"];
+    
+  const femaleFirstNames = ["Sneha", "Anjali", "Kritika", "Kavita", "Divya", "Pooja", "Anamika", "Neha", "Meera", "Sunita", 
+    "Radha", "Smita", "Nandini", "Anita", "Swati", "Jaya", "Ritu", "Preeti", "Seema", "Shreya", "Aarti", "Monica", "Varsha", 
+    "Rekha", "Jyoti", "Shikha", "Sarika", "Manisha", "Ananya", "Ishita", "Nidhi", "Garima", "Shweta", "Deepika", "Shilpa"];
+    
+  // List of last names
+  const lastNames = ["Patel", "Shah", "Reddy", "Singh", "Kumar", "Joshi", "Sharma", "Verma", "Gupta", "Nair", 
+    "Iyer", "Deshmukh", "Patil", "Agarwal", "Choudhury", "Malhotra", "Kapoor", "Bhat", "Hegde", "Chatterjee", 
+    "Banerjee", "Kaur", "Trivedi", "Goyal", "Saxena", "Sethi", "Arora", "Mehta", "Das", "Chopra", "Khanna", 
+    "Rao", "Menon", "Bose", "Naidu", "Kulkarni", "Jain", "Chakraborty", "Sengupta", "Bhatia", "Yadav", "Rathore"];
+  
+  // Generate lawyers for each domain
+  DOMAINS.forEach(domain => {
+    // Generate approximately 10-15 lawyers per domain
+    const numLawyers = Math.floor(Math.random() * 6) + 10;
+    
+    for (let i = 0; i < numLawyers; i++) {
+      const gender = Math.random() > 0.5 ? "male" : "female";
+      const firstName = gender === "male" 
+        ? maleFirstNames[Math.floor(Math.random() * maleFirstNames.length)]
+        : femaleFirstNames[Math.floor(Math.random() * femaleFirstNames.length)];
+      const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+      
+      // Generate unique email
+      const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${Math.floor(Math.random() * 999)}@example.com`;
+      
+      // Generate random experience between 3 and 25 years
+      const experience = Math.floor(Math.random() * 22) + 3;
+      
+      // Generate fees based on experience and domain
+      let baseFee = 0;
+      switch (domain) {
+        case "Corporate Law":
+        case "Intellectual Property":
+          baseFee = 5000;
+          break;
+        case "Criminal Law":
+        case "Constitutional Law":
+          baseFee = 4000;
+          break;
+        case "Tax Law":
+        case "Environmental Law":
+          baseFee = 4500;
+          break;
+        default:
+          baseFee = 3000;
+      }
+      const fees = baseFee + (experience * 200) + (Math.floor(Math.random() * 1000));
+      
+      // Generate random rating between 3.0 and 5.0
+      const rating = (Math.random() * 2 + 3).toFixed(1);
+      
+      // Generate cases won and total cases
+      const successRate = Math.random() * 0.3 + 0.65; // 65% to 95%
+      const totalCases = Math.floor((experience * 15) * (Math.random() * 0.5 + 0.75));
+      const casesWon = Math.floor(totalCases * successRate);
+      
+      // Get random city, law school and bar association
+      const city = CITIES[Math.floor(Math.random() * CITIES.length)];
+      const lawSchool = LAW_SCHOOLS[Math.floor(Math.random() * LAW_SCHOOLS.length)];
+      const barAssociation = BAR_ASSOCIATIONS[Math.floor(Math.random() * BAR_ASSOCIATIONS.length)];
+      
+      lawyers.push({
+        id: `lawyer${idCounter++}`,
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        gender: gender,
+        experience: experience,
+        domain: domain,
+        fees_per_hearing: fees,
+        rating: parseFloat(rating),
+        cases_won: casesWon,
+        total_cases: totalCases,
+        city: city,
+        law_school: lawSchool,
+        bar_association: barAssociation
+      });
+    }
+  });
+  
+  return lawyers;
+}
 
 // Define LawyerData type for use throughout the app
 export interface LawyerData {

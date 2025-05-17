@@ -6,25 +6,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useNavigate } from "react-router-dom";
+import { LawyerData } from "@/utils/machineLearningSim";
 
 interface LawyerCardProps {
-  lawyer: {
-    id: string;
-    first_name: string;
-    last_name: string;
-    age?: number;
-    gender: string;
-    experience: number;
-    total_cases?: number;
-    cases_won?: number;
-    domain: string;
-    fees_per_hearing: number;
-    rating: number;
-    city: string;
-    law_school?: string;
-    bar_association?: string;
-    profileImage?: string;
-  };
+  lawyer: LawyerData;
 }
 
 const LawyerCard = ({ lawyer }: LawyerCardProps) => {
@@ -33,8 +18,7 @@ const LawyerCard = ({ lawyer }: LawyerCardProps) => {
   
   const {
     id,
-    first_name,
-    last_name,
+    name,
     experience,
     domain,
     fees_per_hearing,
@@ -43,9 +27,16 @@ const LawyerCard = ({ lawyer }: LawyerCardProps) => {
     law_school,
     profileImage,
     cases_won,
-    total_cases
+    total_cases,
+    first_name,
+    last_name
   } = lawyer;
 
+  // Use name directly if available, otherwise construct from first_name and last_name
+  const displayName = name || (first_name && last_name ? `${first_name} ${last_name}` : "Unnamed Lawyer");
+  const firstInitial = first_name ? first_name[0] : (name ? name[0] : "?");
+  const lastInitial = last_name ? last_name[0] : "";
+  
   const successRate = total_cases && cases_won ? Math.round((cases_won / total_cases) * 100) : null;
   
   return (
@@ -63,13 +54,13 @@ const LawyerCard = ({ lawyer }: LawyerCardProps) => {
         <CardHeader className="pt-6">
           <div className="flex items-center justify-between">
             <Avatar className={`h-16 w-16 ring-2 ring-accent/50 transition-all duration-300 ${isHovered ? 'ring-4 ring-accent' : ''}`}>
-              <AvatarImage src={profileImage || `https://api.dicebear.com/7.x/initials/svg?seed=${first_name} ${last_name}`} />
-              <AvatarFallback>{first_name[0]}{last_name[0]}</AvatarFallback>
+              <AvatarImage src={profileImage || `https://api.dicebear.com/7.x/initials/svg?seed=${displayName}`} />
+              <AvatarFallback>{firstInitial}{lastInitial}</AvatarFallback>
             </Avatar>
             <Badge className="bg-accent text-accent-foreground">{domain}</Badge>
           </div>
           <CardTitle className="mt-4 flex items-center">
-            {first_name} {last_name}
+            {displayName}
             {rating >= 4.5 && (
               <Badge variant="outline" className="ml-2 bg-amber-500/10 text-amber-500 border-amber-500/20">
                 Top Rated

@@ -1,5 +1,4 @@
-
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { User, Role } from '../types/user';
 import { toast } from "sonner";
 
@@ -77,7 +76,7 @@ interface LawyerProfile extends LawyerRegistrationData {
 // Create a context to store lawyer profiles for demo purposes
 const LawyerProfiles: Record<string, LawyerProfile> = {};
 const UserProfiles: Record<string, UserProfile> = {};
-const RegisteredUsers: Record<string, {password: string, role: Role, name: string, id: string}> = {};
+const RegisteredUsers: Record<string, {password: string, role: Role}> = {};
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -108,19 +107,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Load registered users from localStorage on mount
-  useEffect(() => {
-    const storedRegisteredUsers = localStorage.getItem('registeredUsers');
-    if (storedRegisteredUsers) {
-      try {
-        const parsedUsers = JSON.parse(storedRegisteredUsers);
-        Object.assign(RegisteredUsers, parsedUsers);
-      } catch (error) {
-        console.error('Failed to parse registered users from localStorage:', error);
-      }
-    }
-    
-    // Check for existing user session in localStorage on mount
+  // Check for existing user session in localStorage on mount
+  React.useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       try {
@@ -153,18 +141,26 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     
     try {
       // Validate credentials against registered users
-      if (!RegisteredUsers[email] || RegisteredUsers[email].password !== password) {
+      const userExists = Object.entries(RegisteredUsers).find(
+        ([userEmail, data]) => userEmail === email && data.password === password
+      );
+      
+      if (!userExists) {
         throw new Error("Invalid email or password");
       }
       
-      // Get user data from registration info
-      const userData = RegisteredUsers[email];
+      // Find user data in localStorage for existing users
+      const storedUsers = localStorage.getItem('registeredUsers');
+      const users = storedUsers ? JSON.parse(storedUsers) : {};
+      
+      // Determine role from registration data
+      const role = userExists[1].role;
       
       const mockUser: User = {
-        id: userData.id,
-        name: userData.name,
+        id: email.replace(/[^a-zA-Z0-9]/g, ''),
+        name: email.split('@')[0],
         email,
-        role: userData.role,
+        role,
         profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${email}`,
       };
       
@@ -207,7 +203,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     
     try {
       // Check if user already exists
-      if (RegisteredUsers[email]) {
+      const storedUsers = localStorage.getItem('registeredUsers');
+      const users = storedUsers ? JSON.parse(storedUsers) : {};
+      
+      if (users[email]) {
         throw new Error("User with this email already exists");
       }
       
@@ -217,9 +216,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       // Register the new user
       RegisteredUsers[email] = {
         password,
-        role,
-        name,
-        id: userId
+        role
       };
       
       // Save to localStorage for persistence
@@ -260,7 +257,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     
     try {
       // Check if user already exists
-      if (RegisteredUsers[data.email]) {
+      const storedUsers = localStorage.getItem('registeredUsers');
+      const users = storedUsers ? JSON.parse(storedUsers) : {};
+      
+      if (users[data.email]) {
         throw new Error("User with this email already exists");
       }
       
@@ -270,9 +270,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       // Register the lawyer in users
       RegisteredUsers[data.email] = {
         password: data.password,
-        role: "lawyer",
-        name: `${data.first_name} ${data.last_name}`,
-        id: lawyerId
+        role: "lawyer"
       };
       
       // Save to localStorage

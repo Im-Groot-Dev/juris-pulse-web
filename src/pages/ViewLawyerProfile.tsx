@@ -4,10 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
 import LawyerProfile from "@/components/LawyerProfile";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import { SAMPLE_LAWYERS } from "@/utils/machineLearningSim";
-import { useAuth } from "@/contexts/AuthContext";
 
 interface LawyerData {
   id: string;
@@ -27,68 +24,75 @@ interface LawyerData {
   bar_association?: string;
 }
 
+// Mock lawyer data for demonstration
+const MOCK_LAWYERS: Record<string, LawyerData> = {
+  "lawyer1": {
+    id: "lawyer1",
+    name: "Rajesh Kumar",
+    profileImage: "https://api.dicebear.com/7.x/personas/svg?seed=Rajesh",
+    email: "rajesh.kumar@example.com",
+    domain: "Corporate Law",
+    experience: 12,
+    fees_per_hearing: 5000,
+    rating: 4.8,
+    cases_won: 87,
+    total_cases: 95,
+    city: "Mumbai",
+    bio: "Rajesh is a corporate law specialist with over a decade of experience handling complex business negotiations, mergers, and acquisitions for major Indian and international corporations.",
+    contact_number: "+91 9876543210",
+    law_school: "National Law School of India University, Bangalore",
+    bar_association: "Bar Council of Maharashtra and Goa"
+  },
+  "lawyer2": {
+    id: "lawyer2",
+    name: "Priya Sharma",
+    profileImage: "https://api.dicebear.com/7.x/personas/svg?seed=Priya",
+    email: "priya.sharma@example.com",
+    domain: "Family Law",
+    experience: 8,
+    fees_per_hearing: 3500,
+    rating: 4.7,
+    cases_won: 145,
+    total_cases: 160,
+    city: "Delhi",
+    bio: "Priya specializes in family law matters including divorce, child custody, and matrimonial disputes. She is known for her compassionate approach and strong advocacy for her clients.",
+    contact_number: "+91 9876543211",
+    law_school: "Faculty of Law, Delhi University",
+    bar_association: "Delhi Bar Association"
+  },
+  "lawyer3": {
+    id: "lawyer3",
+    name: "Avinash Mehta",
+    profileImage: "https://api.dicebear.com/7.x/personas/svg?seed=Avinash",
+    email: "avinash.mehta@example.com",
+    domain: "Criminal Law",
+    experience: 15,
+    fees_per_hearing: 7000,
+    rating: 4.9,
+    cases_won: 210,
+    total_cases: 230,
+    city: "Bangalore",
+    bio: "Avinash is one of the most sought-after criminal defense attorneys in Bangalore. With 15 years of experience, he has successfully defended clients in high-profile criminal cases.",
+    contact_number: "+91 9876543212",
+    law_school: "ILS Law College, Pune",
+    bar_association: "Karnataka State Bar Council"
+  }
+};
+
 const ViewLawyerProfile = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [lawyer, setLawyer] = useState<LawyerData | null>(null);
   const [loading, setLoading] = useState(true);
-  const { isAuthenticated } = useAuth();
   
   useEffect(() => {
     // In a real app, this would fetch data from an API
-    // For demo purposes, we'll use the sample data
+    // For demo purposes, we'll use the mock data
     if (id) {
-      setLoading(true);
       setTimeout(() => {
-        // First check localStorage for lawyer profile (for newly registered lawyers)
-        const storedLawyer = localStorage.getItem(`lawyer_${id}`);
-        if (storedLawyer) {
-          try {
-            const parsedLawyer = JSON.parse(storedLawyer);
-            setLawyer({
-              id: parsedLawyer.id,
-              name: `${parsedLawyer.first_name} ${parsedLawyer.last_name}`,
-              profileImage: parsedLawyer.profileImage,
-              email: parsedLawyer.email,
-              domain: parsedLawyer.domain,
-              experience: parsedLawyer.experience,
-              fees_per_hearing: parsedLawyer.fees_per_hearing,
-              rating: parsedLawyer.rating || 4.5,
-              cases_won: parsedLawyer.cases_won,
-              total_cases: parsedLawyer.total_cases,
-              city: parsedLawyer.city,
-              bio: parsedLawyer.bio,
-              contact_number: parsedLawyer.contact_number,
-              law_school: parsedLawyer.law_school,
-              bar_association: parsedLawyer.bar_association
-            });
-            setLoading(false);
-            return;
-          } catch (error) {
-            console.error("Failed to parse lawyer data:", error);
-          }
-        }
-        
-        // Fall back to sample lawyers
-        const sampleLawyer = SAMPLE_LAWYERS.find(l => l.id === id);
-        if (sampleLawyer) {
-          setLawyer({
-            id: sampleLawyer.id,
-            name: `${sampleLawyer.first_name} ${sampleLawyer.last_name}`,
-            profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${sampleLawyer.first_name}${sampleLawyer.id}`,
-            email: sampleLawyer.email,
-            domain: sampleLawyer.domain,
-            experience: sampleLawyer.experience,
-            fees_per_hearing: sampleLawyer.fees_per_hearing,
-            rating: sampleLawyer.rating,
-            cases_won: sampleLawyer.cases_won,
-            total_cases: sampleLawyer.total_cases,
-            city: sampleLawyer.city,
-            bio: `${sampleLawyer.first_name} ${sampleLawyer.last_name} is a specialized ${sampleLawyer.domain} lawyer with ${sampleLawyer.experience} years of experience. They have successfully handled ${sampleLawyer.cases_won} cases out of ${sampleLawyer.total_cases} total cases and are a member of the ${sampleLawyer.bar_association}.`,
-            contact_number: `+91 ${9800000000 + parseInt(sampleLawyer.id.replace('lawyer', ''))}`,
-            law_school: sampleLawyer.law_school,
-            bar_association: sampleLawyer.bar_association
-          });
+        const foundLawyer = MOCK_LAWYERS[id];
+        if (foundLawyer) {
+          setLawyer(foundLawyer);
         } else {
           toast.error("Lawyer not found");
           navigate("/find-lawyer");
@@ -144,32 +148,7 @@ const ViewLawyerProfile = () => {
           <p className="text-muted-foreground">View detailed information and schedule appointments</p>
         </div>
         
-        {!isAuthenticated && (
-          <Card className="mb-6 p-4 bg-muted/30 border-accent/30">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <p className="text-sm text-muted-foreground">
-                <strong>Sign in to schedule appointments</strong> and save this lawyer to your profile.
-              </p>
-              <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => navigate("/login", { state: { from: `/lawyer/${id}` } })}
-                >
-                  Sign In
-                </Button>
-                <Button 
-                  size="sm" 
-                  onClick={() => navigate("/register", { state: { from: `/lawyer/${id}` } })}
-                >
-                  Register
-                </Button>
-              </div>
-            </div>
-          </Card>
-        )}
-        
-        {lawyer && <LawyerProfile lawyer={lawyer} />}
+        <LawyerProfile lawyer={lawyer} />
       </div>
     </PageLayout>
   );

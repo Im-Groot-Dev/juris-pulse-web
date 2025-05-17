@@ -1,6 +1,26 @@
-// This file simulates machine learning data for matching lawyers with clients
 
-// Define legal domains
+// Lawyer data interface
+export interface LawyerData {
+  id: string;
+  first_name: string;
+  last_name: string;
+  age?: number;
+  gender: string;
+  experience: number;
+  total_cases?: number;
+  cases_won?: number;
+  domain: string;
+  fees_per_hearing: number;
+  rating: number;
+  city: string;
+  law_school?: string;
+  bar_association?: string;
+  profileImage?: string;
+  address?: string;
+  contact_number?: string;
+}
+
+// Constants for dropdowns
 export const DOMAINS = [
   "Corporate Law",
   "Criminal Law",
@@ -14,44 +34,6 @@ export const DOMAINS = [
   "Immigration Law",
 ];
 
-// Define law schools
-export const LAW_SCHOOLS = [
-  "National Law School of India University, Bangalore",
-  "Faculty of Law, Delhi University",
-  "ILS Law College, Pune",
-  "Jindal Global Law School, Sonipat",
-  "Symbiosis Law School, Pune",
-  "Government Law College, Mumbai",
-  "Campus Law Centre, Delhi",
-  "NALSAR University of Law, Hyderabad",
-  "West Bengal National University of Juridical Sciences, Kolkata",
-  "Gujarat National Law University, Gandhinagar",
-  "The WB National University of Juridical Sciences, Kolkata",
-  "National Law University, Delhi",
-  "Rajiv Gandhi National University of Law, Patiala",
-  "Chanakya National Law University, Patna",
-  "National Law University Odisha, Cuttack",
-];
-
-// Define bar associations
-export const BAR_ASSOCIATIONS = [
-  "Bar Council of India",
-  "Supreme Court Bar Association",
-  "Bar Council of Delhi",
-  "Bar Council of Maharashtra and Goa",
-  "Bombay Bar Association",
-  "Delhi Bar Association",
-  "Karnataka State Bar Council",
-  "Tamil Nadu Bar Council",
-  "Madras Bar Association",
-  "Kerala Bar Council",
-  "Punjab Bar Council",
-  "Bar Council of Uttar Pradesh",
-  "Calcutta High Court Bar Association",
-  "Gujarat Bar Council",
-];
-
-// Define cities
 export const CITIES = [
   "Mumbai",
   "Delhi",
@@ -67,307 +49,102 @@ export const CITIES = [
   "Kochi",
 ];
 
-// Sample lawyer data for demonstration
-export const SAMPLE_LAWYERS = [
-  // Original sample lawyers
-  {
-    id: "lawyer1",
-    first_name: "Rajesh",
-    last_name: "Kumar",
-    email: "rajesh.kumar@example.com",
-    gender: "male",
-    experience: 12,
-    domain: "Corporate Law",
-    fees_per_hearing: 5000,
-    rating: 4.8,
-    cases_won: 87,
-    total_cases: 95,
-    city: "Mumbai",
-    law_school: "National Law School of India University, Bangalore",
-    bar_association: "Bar Council of Maharashtra and Goa",
-    contact_number: "+91 98765 43210",
-  },
-  {
-    id: "lawyer2",
-    first_name: "Priya",
-    last_name: "Sharma",
-    email: "priya.sharma@example.com",
-    gender: "female",
-    experience: 8,
-    domain: "Family Law",
-    fees_per_hearing: 3500,
-    rating: 4.7,
-    cases_won: 145,
-    total_cases: 160,
-    city: "Delhi",
-    law_school: "Faculty of Law, Delhi University",
-    bar_association: "Delhi Bar Association",
-    contact_number: "+91 87654 32109",
-  },
-  {
-    id: "lawyer3",
-    first_name: "Avinash",
-    last_name: "Mehta",
-    email: "avinash.mehta@example.com",
-    gender: "male",
-    experience: 15,
-    domain: "Criminal Law",
-    fees_per_hearing: 7000,
-    rating: 4.9,
-    cases_won: 210,
-    total_cases: 230,
-    city: "Bangalore",
-    law_school: "ILS Law College, Pune",
-    bar_association: "Karnataka State Bar Council",
-    contact_number: "+91 76543 21098",
-  },
-  // Generating more lawyers for each domain
-  ...generateLawyers()
+export const LAW_SCHOOLS = [
+  "National Law School of India University, Bangalore",
+  "NALSAR University of Law, Hyderabad",
+  "The West Bengal National University of Juridical Sciences, Kolkata",
+  "National Law University, Delhi",
+  "ILS Law College, Pune",
+  "Faculty of Law, Delhi University",
+  "Government Law College, Mumbai",
+  "Symbiosis Law School, Pune",
+  "Jindal Global Law School, Sonipat",
+  "Faculty of Law, Banaras Hindu University"
 ];
 
-// Function to generate additional lawyers
-function generateLawyers() {
-  const lawyers = [];
-  let idCounter = 4; // Start after the original 3 lawyers
-  
-  // List of first names
-  const maleFirstNames = ["Amit", "Vikram", "Suresh", "Rohit", "Rahul", "Sanjay", "Deepak", "Ajay", "Vijay", "Nitin", 
-    "Prakash", "Anil", "Sunil", "Rakesh", "Vivek", "Mahesh", "Dinesh", "Rajiv", "Manoj", "Ashok", "Pankaj", "Vinod", 
-    "Manish", "Ravi", "Jayesh", "Bharat", "Sachin", "Surya", "Aditya", "Karan", "Siddharth", "Rohan", "Neeraj", "Tushar", "Arun"];
-    
-  const femaleFirstNames = ["Sneha", "Anjali", "Kritika", "Kavita", "Divya", "Pooja", "Anamika", "Neha", "Meera", "Sunita", 
-    "Radha", "Smita", "Nandini", "Anita", "Swati", "Jaya", "Ritu", "Preeti", "Seema", "Shreya", "Aarti", "Monica", "Varsha", 
-    "Rekha", "Jyoti", "Shikha", "Sarika", "Manisha", "Ananya", "Ishita", "Nidhi", "Garima", "Shweta", "Deepika", "Shilpa"];
-    
-  // List of last names
-  const lastNames = ["Patel", "Shah", "Reddy", "Singh", "Kumar", "Joshi", "Sharma", "Verma", "Gupta", "Nair", 
-    "Iyer", "Deshmukh", "Patil", "Agarwal", "Choudhury", "Malhotra", "Kapoor", "Bhat", "Hegde", "Chatterjee", 
-    "Banerjee", "Kaur", "Trivedi", "Goyal", "Saxena", "Sethi", "Arora", "Mehta", "Das", "Chopra", "Khanna", 
-    "Rao", "Menon", "Bose", "Naidu", "Kulkarni", "Jain", "Chakraborty", "Sengupta", "Bhatia", "Yadav", "Rathore"];
-  
-  // Generate lawyers for each domain
-  DOMAINS.forEach(domain => {
-    // Generate approximately 20-25 lawyers per domain to reach 200+ total
-    const numLawyers = Math.floor(Math.random() * 6) + 20;
-    
-    for (let i = 0; i < numLawyers; i++) {
-      const gender = Math.random() > 0.5 ? "male" : "female";
-      const firstName = gender === "male" 
-        ? maleFirstNames[Math.floor(Math.random() * maleFirstNames.length)]
-        : femaleFirstNames[Math.floor(Math.random() * femaleFirstNames.length)];
-      const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-      
-      // Generate unique email
-      const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${Math.floor(Math.random() * 999)}@example.com`;
-      
-      // Generate random experience between 3 and 25 years
-      const experience = Math.floor(Math.random() * 22) + 3;
-      
-      // Generate fees based on experience and domain
-      let baseFee = 0;
-      switch (domain) {
-        case "Corporate Law":
-        case "Intellectual Property":
-          baseFee = 5000;
-          break;
-        case "Criminal Law":
-        case "Constitutional Law":
-          baseFee = 4000;
-          break;
-        case "Tax Law":
-        case "Environmental Law":
-          baseFee = 4500;
-          break;
-        default:
-          baseFee = 3000;
-      }
-      const fees = baseFee + (experience * 200) + (Math.floor(Math.random() * 1000));
-      
-      // Generate random rating between 3.0 and 5.0
-      const rating = (Math.random() * 2 + 3).toFixed(1);
-      
-      // Generate cases won and total cases
-      const successRate = Math.random() * 0.3 + 0.65; // 65% to 95%
-      const totalCases = Math.floor((experience * 15) * (Math.random() * 0.5 + 0.75));
-      const casesWon = Math.floor(totalCases * successRate);
-      
-      // Get random city, law school and bar association
-      const city = CITIES[Math.floor(Math.random() * CITIES.length)];
-      const lawSchool = LAW_SCHOOLS[Math.floor(Math.random() * LAW_SCHOOLS.length)];
-      const barAssociation = BAR_ASSOCIATIONS[Math.floor(Math.random() * BAR_ASSOCIATIONS.length)];
-      
-      // Generate contact number
-      const contactNumber = `+91 ${Math.floor(Math.random() * 90000) + 10000} ${Math.floor(Math.random() * 90000) + 10000}`;
-      
-      lawyers.push({
-        id: `lawyer${idCounter++}`,
-        first_name: firstName,
-        last_name: lastName,
-        email: email,
-        gender: gender,
-        experience: experience,
-        domain: domain,
-        fees_per_hearing: fees,
-        rating: parseFloat(rating),
-        cases_won: casesWon,
-        total_cases: totalCases,
-        city: city,
-        law_school: lawSchool,
-        bar_association: barAssociation,
-        contact_number: contactNumber
-      });
-    }
-  });
-  
-  return lawyers;
-}
+export const BAR_ASSOCIATIONS = [
+  "Bar Council of India",
+  "Supreme Court Bar Association",
+  "Delhi Bar Association",
+  "Mumbai Bar Association",
+  "Calcutta Bar Association",
+  "Chennai Bar Association",
+  "Bangalore Bar Association",
+  "Hyderabad Bar Association",
+  "Punjab Bar Council",
+  "Gujarat Bar Council"
+];
 
-// Define LawyerData type for use throughout the app
-export interface LawyerData {
-  id: string;
-  name: string;
-  profileImage?: string;
-  email: string;
-  domain: string;
-  experience: number;
-  fees_per_hearing: number;
-  rating: number;
-  cases_won: number;
-  total_cases: number;
-  city: string;
-  bio?: string;
-  contact_number?: string;
-  law_school?: string;
-  bar_association?: string;
-  gender?: string;
-  first_name: string;
-  last_name: string;
-}
+// Generate random lawyer data
+const generateLawyerData = (count = 5000): LawyerData[] => {
+  const firstNames = ["Aarav", "Vivaan", "Aditya", "Vihaan", "Arjun", "Reyansh", "Ayaan", "Atharva", "Krishna", "Ishaan", "Shaurya", "Advait", "Dhruv", "Kabir", "Ritvik", "Aarush", "Kayaan", "Darsh", "Veer", "Samar", "Siddharth", "Arnav", "Divit", "Pranav", "Pranay", "Anirudh", "Aahil", "Aaryan", "Zayan", "Pranit", "Neel", "Samarth", "Aayan", "Dhruvin", "Rudra", "Shreyas", "Aryan", "Reyansh", "Yuvraj", "Yash", "Advik"];
+  const femaleNames = ["Aanya", "Aadhya", "Aaradhya", "Ananya", "Pari", "Anika", "Navya", "Diya", "Saanvi", "Myra", "Sara", "Iraa", "Ahana", "Anvi", "Prisha", "Riya", "Aarohi", "Anjali", "Anaya", "Siya", "Divya", "Avni", "Krisha", "Neha", "Shreya", "Tanvi", "Trisha", "Ishita", "Kiara", "Sanjana", "Shravya", "Vanya", "Rhea", "Shanaya", "Tanisha", "Meera", "Ritika", "Snigdha", "Kyra", "Kavya", "Shivani"];
+  const lastNames = ["Sharma", "Verma", "Patel", "Gupta", "Singh", "Kaur", "Shah", "Kumar", "Joshi", "Pandey", "Reddy", "Rao", "Chatterjee", "Banerjee", "Mukherjee", "Kapoor", "Das", "Saxena", "Srivastava", "Malhotra", "Bose", "Sen", "Khanna", "Mehta", "Jain", "Chopra", "Bhat", "Chauhan", "Bhatia", "Agarwal", "Trivedi", "Maheshwari", "Patil", "Mangal", "Arora", "Garg", "Menon", "Talwar", "Nair", "Iyer"];
 
-// Function to initialize sample data in localStorage
-export const initializeSampleData = () => {
-  // Check if sample data already exists
-  const sampleDataExists = localStorage.getItem('sampleDataInitialized');
-  if (sampleDataExists) return;
+  const lawyers: LawyerData[] = [];
   
-  // Initialize sample lawyers
-  SAMPLE_LAWYERS.forEach((lawyer) => {
-    const lawyerId = lawyer.id;
-    const profile = {
-      ...lawyer,
-      appointments: [],
-      clients: [],
-      reviews: [],
-      profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${lawyer.first_name}${lawyer.email}`,
-    };
+  for (let i = 0; i < count; i++) {
+    const gender = Math.random() > 0.5 ? "Male" : "Female";
+    const firstName = gender === "Male" 
+      ? firstNames[Math.floor(Math.random() * firstNames.length)]
+      : femaleNames[Math.floor(Math.random() * femaleNames.length)];
+    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
     
-    localStorage.setItem(`lawyer_${lawyerId}`, JSON.stringify(profile));
-  });
-  
-  // Mark as initialized
-  localStorage.setItem('sampleDataInitialized', 'true');
-};
-
-// Function to match lawyers based on user query
-export const findMatchingLawyers = (query: string) => {
-  // In a real app, this would use ML algorithms
-  // For demo, we'll do simple keyword matching
-  query = query.toLowerCase();
-  
-  return SAMPLE_LAWYERS.filter(lawyer => 
-    lawyer.domain.toLowerCase().includes(query) ||
-    lawyer.city.toLowerCase().includes(query) ||
-    `${lawyer.first_name} ${lawyer.last_name}`.toLowerCase().includes(query)
-  );
-};
-
-// Function to get all lawyer data (from both sample data and localStorage)
-export const getLawyerData = (): LawyerData[] => {
-  // First, ensure sample data is initialized
-  initializeSampleData();
-  
-  // Get all lawyers from localStorage
-  const allLawyers: LawyerData[] = [];
-  
-  // First collect sample lawyers
-  SAMPLE_LAWYERS.forEach(lawyer => {
-    const storedData = localStorage.getItem(`lawyer_${lawyer.id}`);
-    if (storedData) {
-      try {
-        const parsedLawyer = JSON.parse(storedData);
-        allLawyers.push({
-          id: parsedLawyer.id,
-          name: `${parsedLawyer.first_name} ${parsedLawyer.last_name}`,
-          profileImage: parsedLawyer.profileImage || `https://api.dicebear.com/7.x/personas/svg?seed=${parsedLawyer.first_name}${parsedLawyer.email}`,
-          email: parsedLawyer.email,
-          domain: parsedLawyer.domain,
-          experience: parsedLawyer.experience,
-          fees_per_hearing: parsedLawyer.fees_per_hearing,
-          rating: parsedLawyer.rating || 4.5,
-          cases_won: parsedLawyer.cases_won,
-          total_cases: parsedLawyer.total_cases,
-          city: parsedLawyer.city,
-          bio: parsedLawyer.bio || `${parsedLawyer.first_name} is a specialized ${parsedLawyer.domain} lawyer with ${parsedLawyer.experience} years of experience.`,
-          contact_number: parsedLawyer.contact_number,
-          law_school: parsedLawyer.law_school,
-          bar_association: parsedLawyer.bar_association,
-          gender: parsedLawyer.gender,
-          first_name: parsedLawyer.first_name,
-          last_name: parsedLawyer.last_name
-        });
-      } catch (error) {
-        console.error("Failed to parse lawyer data:", error);
-      }
-    }
-  });
-  
-  // Then find any additional lawyers in localStorage (newly registered)
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key && key.startsWith("lawyer_") && !key.endsWith("_appointments")) {
-      const id = key.replace("lawyer_", "");
-      // Skip if we already have this lawyer from the sample data
-      if (allLawyers.some(lawyer => lawyer.id === id)) {
-        continue;
-      }
-      
-      try {
-        const storedData = localStorage.getItem(key);
-        if (storedData) {
-          const parsedLawyer = JSON.parse(storedData);
-          allLawyers.push({
-            id: parsedLawyer.id,
-            name: `${parsedLawyer.first_name} ${parsedLawyer.last_name}`,
-            profileImage: parsedLawyer.profileImage || `https://api.dicebear.com/7.x/personas/svg?seed=${parsedLawyer.first_name}${parsedLawyer.email}`,
-            email: parsedLawyer.email,
-            domain: parsedLawyer.domain,
-            experience: parsedLawyer.experience,
-            fees_per_hearing: parsedLawyer.fees_per_hearing,
-            rating: parsedLawyer.rating || 4.5,
-            cases_won: parsedLawyer.cases_won,
-            total_cases: parsedLawyer.total_cases,
-            city: parsedLawyer.city,
-            bio: parsedLawyer.bio || `${parsedLawyer.first_name} is a specialized ${parsedLawyer.domain} lawyer with ${parsedLawyer.experience} years of experience.`,
-            contact_number: parsedLawyer.contact_number,
-            law_school: parsedLawyer.law_school,
-            bar_association: parsedLawyer.bar_association,
-            gender: parsedLawyer.gender,
-            first_name: parsedLawyer.first_name,
-            last_name: parsedLawyer.last_name
-          });
-        }
-      } catch (error) {
-        console.error("Failed to parse lawyer data:", error);
-      }
-    }
+    const experience = Math.floor(Math.random() * 30) + 1;
+    const age = Math.floor(Math.random() * 30) + 30; // Age between 30 and 59
+    const totalCases = Math.floor(Math.random() * 500) + 50; // Between 50 and 549 cases
+    const casesWon = Math.floor(Math.random() * totalCases);
+    const domain = DOMAINS[Math.floor(Math.random() * DOMAINS.length)];
+    const fees = Math.floor(Math.random() * 40000) + 5000; // Between 5000 and 45000
+    const rating = parseFloat((Math.random() * 2 + 3).toFixed(1)); // Rating between 3.0 and 5.0
+    const city = CITIES[Math.floor(Math.random() * CITIES.length)];
+    const lawSchool = LAW_SCHOOLS[Math.floor(Math.random() * LAW_SCHOOLS.length)];
+    const barAssociation = BAR_ASSOCIATIONS[Math.floor(Math.random() * BAR_ASSOCIATIONS.length)];
+    
+    lawyers.push({
+      id: `lawyer-${i + 1}`,
+      first_name: firstName,
+      last_name: lastName,
+      age,
+      gender,
+      experience,
+      total_cases: totalCases,
+      cases_won: casesWon,
+      domain,
+      fees_per_hearing: fees,
+      rating,
+      city,
+      law_school: lawSchool,
+      bar_association: barAssociation,
+      // Use a placeholder image service - in a real app you would use avatars from a proper API
+      profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${firstName}${lastName}${gender}`,
+    });
   }
   
-  return allLawyers;
+  return lawyers;
 };
 
-// Function to filter lawyers based on criteria
+// In-memory storage for lawyer data
+let lawyerDatabase: LawyerData[] = [];
+
+// Get lawyer data - initialize if not already done
+export const getLawyerData = (): LawyerData[] => {
+  if (lawyerDatabase.length === 0) {
+    lawyerDatabase = generateLawyerData();
+  }
+  return lawyerDatabase;
+};
+
+// Add the missing initializeSampleData function
+export const initializeSampleData = (): void => {
+  if (lawyerDatabase.length === 0) {
+    lawyerDatabase = generateLawyerData();
+  }
+};
+
+// Filter lawyers based on criteria
 export const filterLawyers = (
-  lawyers: LawyerData[], 
+  lawyers: LawyerData[],
   filters: {
     domain?: string;
     city?: string;
@@ -376,35 +153,28 @@ export const filterLawyers = (
     minRating?: number;
     maxFees?: number;
   }
-) => {
-  return lawyers.filter(lawyer => {
-    // Domain filter
+): LawyerData[] => {
+  return lawyers.filter((lawyer) => {
     if (filters.domain && filters.domain !== "all" && lawyer.domain !== filters.domain) {
       return false;
     }
     
-    // City filter
     if (filters.city && filters.city !== "all" && lawyer.city !== filters.city) {
       return false;
     }
     
-    // Gender filter
-    if (filters.gender && filters.gender !== "any" && 
-        lawyer.gender?.toLowerCase() !== filters.gender.toLowerCase()) {
+    if (filters.gender && filters.gender !== "any" && lawyer.gender !== filters.gender) {
       return false;
     }
     
-    // Experience filter
     if (filters.minExperience && lawyer.experience < filters.minExperience) {
       return false;
     }
     
-    // Rating filter
     if (filters.minRating && lawyer.rating < filters.minRating) {
       return false;
     }
     
-    // Fees filter
     if (filters.maxFees && lawyer.fees_per_hearing > filters.maxFees) {
       return false;
     }
@@ -413,78 +183,61 @@ export const filterLawyers = (
   });
 };
 
-// Function to recommend lawyers based on user query
+// Simple TF-IDF-inspired algorithm to match legal issues with lawyers
 export const recommendLawyers = (
-  query: string, 
+  query: string,
   lawyers: LawyerData[],
-  limit = 10
+  limit: number = 20
 ): LawyerData[] => {
-  // In a real ML system, this would use NLP and recommendation algorithms
-  // For our demo, we'll do basic keyword matching with scoring
+  // If no query, return the original list
+  if (!query.trim()) {
+    return lawyers;
+  }
   
-  if (!query) return lawyers;
+  const queryLower = query.toLowerCase();
   
-  query = query.toLowerCase();
-  const queryWords = query.split(/\s+/).filter(word => word.length > 2);
+  // Keywords related to different legal domains
+  const domainKeywords: Record<string, string[]> = {
+    "Corporate Law": ["corporate", "business", "company", "merger", "acquisition", "contract", "shareholder", "board", "director", "investor", "startup", "llc", "incorporation", "trademark", "copyright", "patent"],
+    "Criminal Law": ["criminal", "crime", "theft", "murder", "assault", "battery", "prosecution", "defendant", "victim", "arrest", "jail", "prison", "bail", "felony", "misdemeanor"],
+    "Family Law": ["divorce", "custody", "alimony", "child support", "marriage", "separation", "adoption", "spouse", "domestic", "prenuptial", "guardianship", "paternity"],
+    "Civil Law": ["civil", "lawsuit", "damages", "injury", "compensation", "negligence", "liability", "plaintiff", "defendant", "settlement", "dispute", "mediation", "claim"],
+    "Intellectual Property": ["intellectual", "patent", "copyright", "trademark", "infringement", "invention", "creator", "author", "innovation", "design", "trade secret"],
+    "Real Estate Law": ["property", "real estate", "land", "tenant", "landlord", "lease", "rent", "eviction", "mortgage", "title", "deed", "zoning", "foreclosure"],
+    "Tax Law": ["tax", "irs", "audit", "deduction", "income", "taxation", "evasion", "compliance", "filing", "return", "property tax"],
+    "Constitutional Law": ["constitution", "rights", "amendment", "freedom", "speech", "religion", "due process", "equal protection", "civil rights", "liberty", "fundamental"],
+    "Environmental Law": ["environment", "pollution", "climate", "epa", "conservation", "waste", "energy", "sustainability", "compliance", "contamination", "natural resources"],
+    "Immigration Law": ["immigration", "visa", "citizenship", "naturalization", "green card", "deportation", "asylum", "refugee", "alien", "foreign", "passport", "border"]
+  };
   
-  // If no meaningful query words, return all lawyers
-  if (queryWords.length === 0) return lawyers;
-  
-  // Score each lawyer based on relevance to query
+  // Score each lawyer based on domain relevance to the query
   const scoredLawyers = lawyers.map(lawyer => {
     let score = 0;
     
-    // Check domain match (highest priority)
-    if (lawyer.domain.toLowerCase().includes(query)) {
-      score += 100;
+    // Check domain relevance
+    const domainTerms = domainKeywords[lawyer.domain] || [];
+    for (const term of domainTerms) {
+      if (queryLower.includes(term.toLowerCase())) {
+        score += 5;  // Higher weight for exact domain match
+      }
     }
     
-    // Check name match
-    if (lawyer.name.toLowerCase().includes(query)) {
-      score += 80;
+    // Add points for experience
+    score += lawyer.experience / 5;
+    
+    // Add points for success rate
+    if (lawyer.cases_won && lawyer.total_cases) {
+      const successRate = lawyer.cases_won / lawyer.total_cases;
+      score += successRate * 10;
     }
     
-    // Check city match
-    if (lawyer.city.toLowerCase().includes(query)) {
-      score += 60;
-    }
-    
-    // Check word-by-word matches
-    queryWords.forEach(word => {
-      // Domain word matches
-      if (lawyer.domain.toLowerCase().includes(word)) {
-        score += 30;
-      }
-      
-      // Name word matches
-      if (lawyer.name.toLowerCase().includes(word)) {
-        score += 25;
-      }
-      
-      // Law school matches
-      if (lawyer.law_school?.toLowerCase().includes(word)) {
-        score += 20;
-      }
-      
-      // Bar association matches
-      if (lawyer.bar_association?.toLowerCase().includes(word)) {
-        score += 15;
-      }
-      
-      // City word matches
-      if (lawyer.city.toLowerCase().includes(word)) {
-        score += 10;
-      }
-    });
-    
-    // Boost by experience and rating
-    score += lawyer.experience * 2;
-    score += lawyer.rating * 10;
+    // Add points for rating
+    score += lawyer.rating;
     
     return { lawyer, score };
   });
   
-  // Sort by score (descending) and return the lawyers
+  // Sort by score (descending) and return the top N lawyers
   return scoredLawyers
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)

@@ -11,7 +11,6 @@ import { AppointmentData } from "@/contexts/AuthContext";
 import AppointmentScheduler from "./AppointmentScheduler";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface LawyerProfileProps {
   lawyer: {
@@ -37,7 +36,6 @@ const LawyerProfile = ({ lawyer }: LawyerProfileProps) => {
   const { user, isAuthenticated, saveLawyer, unsaveLawyer, getSavedLawyers, hasScheduledAppointment } = useAuth();
   const [showScheduler, setShowScheduler] = useState(false);
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("overview");
   
   const isSaved = isAuthenticated && getSavedLawyers().includes(lawyer.id);
   const hasAppointment = isAuthenticated && hasScheduledAppointment(lawyer.id);
@@ -45,7 +43,7 @@ const LawyerProfile = ({ lawyer }: LawyerProfileProps) => {
   const handleSaveLawyer = () => {
     if (!isAuthenticated) {
       toast.error("Please login to save this lawyer");
-      navigate("/login", { state: { from: `/lawyer/${lawyer.id}` } });
+      navigate("/login");
       return;
     }
     
@@ -59,7 +57,7 @@ const LawyerProfile = ({ lawyer }: LawyerProfileProps) => {
   const handleAppointment = () => {
     if (!isAuthenticated) {
       toast.error("Please login to schedule an appointment");
-      navigate("/login", { state: { from: `/lawyer/${lawyer.id}` } });
+      navigate("/login");
       return;
     }
     
@@ -124,221 +122,94 @@ const LawyerProfile = ({ lawyer }: LawyerProfileProps) => {
       </CardHeader>
       
       <CardContent className="pt-4">
-        <Tabs defaultValue="overview" className="w-full" onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-3 mb-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="experience">Experience</TabsTrigger>
-            <TabsTrigger value="contact">Contact</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="overview">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h3 className="text-lg font-semibold mb-2">About</h3>
+            <p className="text-muted-foreground">
+              {lawyer.bio || `${lawyer.name} is an experienced ${lawyer.domain} lawyer with ${lawyer.experience} years of practice, offering expert legal services in ${lawyer.city}.`}
+            </p>
+            
+            <div className="mt-4 space-y-4">
               <div>
-                <h3 className="text-lg font-semibold mb-2">About</h3>
-                <p className="text-muted-foreground">
-                  {lawyer.bio || `${lawyer.name} is an experienced ${lawyer.domain} lawyer with ${lawyer.experience} years of practice, offering expert legal services in ${lawyer.city}.`}
-                </p>
-                
-                <div className="mt-4 space-y-4">
-                  <div>
-                    <h4 className="text-sm font-medium mb-1">Education</h4>
-                    <p className="text-sm text-muted-foreground">{lawyer.law_school || "National Law University"}</p>
-                  </div>
-                  
-                  <div>
-                    <h4 className="text-sm font-medium mb-1">Bar Association</h4>
-                    <p className="text-sm text-muted-foreground">{lawyer.bar_association || "State Bar Council"}</p>
-                  </div>
-                </div>
+                <h4 className="text-sm font-medium mb-1">Education</h4>
+                <p className="text-sm text-muted-foreground">{lawyer.law_school || "National Law University"}</p>
               </div>
               
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold mb-2">Performance</h3>
-                
-                <div>
-                  <div className="flex justify-between mb-1">
-                    <span className="text-sm font-medium">Success Rate</span>
-                    <span className="text-sm font-medium">
-                      {Math.round((lawyer.cases_won / lawyer.total_cases) * 100) || 85}%
-                    </span>
-                  </div>
-                  <Progress value={(lawyer.cases_won / lawyer.total_cases) * 100 || 85} className="h-2" />
+              <div>
+                <h4 className="text-sm font-medium mb-1">Bar Association</h4>
+                <p className="text-sm text-muted-foreground">{lawyer.bar_association || "State Bar Council"}</p>
+              </div>
+              
+              <div className="flex flex-col gap-1">
+                <h4 className="text-sm font-medium">Contact Information</h4>
+                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                  <PhoneIcon size={14} />
+                  {lawyer.contact_number || "+91 9876543210"}
                 </div>
-                
-                <div>
-                  <div className="flex justify-between mb-1">
-                    <span className="text-sm font-medium">Cases Won</span>
-                    <span className="text-sm font-medium">
-                      {lawyer.cases_won} / {lawyer.total_cases}
-                    </span>
-                  </div>
-                  <div className="flex gap-1">
-                    <div className="bg-green-500/20 text-green-700 text-xs px-2 py-1 rounded flex items-center gap-1 flex-1">
-                      <CheckCircleIcon size={12} /> 
-                      <span>Won: {lawyer.cases_won}</span>
-                    </div>
-                    <div className="bg-muted/30 text-muted-foreground text-xs px-2 py-1 rounded flex-1 text-center">
-                      Total: {lawyer.total_cases}
-                    </div>
-                  </div>
+                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                  <MailIcon size={14} />
+                  {lawyer.email}
                 </div>
               </div>
             </div>
-          </TabsContent>
+          </div>
           
-          <TabsContent value="experience">
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Professional Experience</h3>
-                <div className="space-y-4">
-                  <div className="border-l-2 border-primary/30 pl-4 pb-4">
-                    <h4 className="font-medium">Senior Partner</h4>
-                    <p className="text-sm text-muted-foreground">Legal Associates LLP, {lawyer.city}</p>
-                    <p className="text-xs text-muted-foreground mt-1">2018 - Present</p>
-                    <p className="text-sm mt-2">
-                      Specializing in {lawyer.domain} cases with a focus on high-profile clients. Managing a team of 4 junior lawyers.
-                    </p>
-                  </div>
-                  
-                  <div className="border-l-2 border-primary/30 pl-4 pb-4">
-                    <h4 className="font-medium">Associate Lawyer</h4>
-                    <p className="text-sm text-muted-foreground">Justice & Partners, {lawyer.city}</p>
-                    <p className="text-xs text-muted-foreground mt-1">2011 - 2018</p>
-                    <p className="text-sm mt-2">
-                      Handled over 100 cases in {lawyer.domain} with a success rate of 85%.
-                    </p>
-                  </div>
-                </div>
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold mb-2">Performance</h3>
+            
+            <div>
+              <div className="flex justify-between mb-1">
+                <span className="text-sm font-medium">Success Rate</span>
+                <span className="text-sm font-medium">
+                  {Math.round((lawyer.cases_won / lawyer.total_cases) * 100) || 85}%
+                </span>
               </div>
-              
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Education & Certifications</h3>
-                <div className="space-y-4">
-                  <div className="border-l-2 border-primary/30 pl-4 pb-4">
-                    <h4 className="font-medium">{lawyer.law_school || "National Law University"}</h4>
-                    <p className="text-sm text-muted-foreground">Bachelor of Laws (LLB)</p>
-                    <p className="text-xs text-muted-foreground mt-1">2007 - 2011</p>
-                  </div>
-                  
-                  <div className="border-l-2 border-primary/30 pl-4">
-                    <h4 className="font-medium">Certified Mediator</h4>
-                    <p className="text-sm text-muted-foreground">Indian Institute of Arbitration and Mediation</p>
-                    <p className="text-xs text-muted-foreground mt-1">2013</p>
-                  </div>
-                </div>
+              <Progress value={(lawyer.cases_won / lawyer.total_cases) * 100 || 85} className="h-2" />
+            </div>
+            
+            <div>
+              <div className="flex justify-between mb-1">
+                <span className="text-sm font-medium">Cases Won</span>
+                <span className="text-sm font-medium">
+                  {lawyer.cases_won} / {lawyer.total_cases}
+                </span>
               </div>
-              
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Case Highlights</h3>
-                <div className="bg-muted/30 rounded-md p-3">
-                  <ul className="list-disc list-inside space-y-2 text-sm">
-                    <li>Successfully represented clients in {Math.round(lawyer.cases_won * 0.2)} high-profile cases</li>
-                    <li>Specialized in complex {lawyer.domain} litigation</li>
-                    <li>{Math.round(lawyer.cases_won * 0.4)} cases settled out of court</li>
-                    <li>{Math.round(lawyer.cases_won * 0.3)} cases won through trial</li>
-                  </ul>
+              <div className="flex gap-1">
+                <div className="bg-green-500/20 text-green-700 text-xs px-2 py-1 rounded flex items-center gap-1 flex-1">
+                  <CheckCircleIcon size={12} /> 
+                  <span>Won: {lawyer.cases_won}</span>
+                </div>
+                <div className="bg-muted/30 text-muted-foreground text-xs px-2 py-1 rounded flex-1 text-center">
+                  Total: {lawyer.total_cases}
                 </div>
               </div>
             </div>
-          </TabsContent>
-          
-          <TabsContent value="contact">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Contact Information</h3>
-                <div className="space-y-3">
-                  <div className="flex items-start gap-2">
-                    <PhoneIcon size={18} className="text-muted-foreground mt-0.5" />
-                    <div>
-                      <p className="font-medium">Phone</p>
-                      <p className="text-muted-foreground">{lawyer.contact_number || "+91 9876543210"}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-2">
-                    <MailIcon size={18} className="text-muted-foreground mt-0.5" />
-                    <div>
-                      <p className="font-medium">Email</p>
-                      <p className="text-muted-foreground">{lawyer.email}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-2">
-                    <MapPinIcon size={18} className="text-muted-foreground mt-0.5" />
-                    <div>
-                      <p className="font-medium">Office Address</p>
-                      <p className="text-muted-foreground">
-                        Legal Square, Civil Lines<br />
-                        {lawyer.city}, 400001<br />
-                        India
-                      </p>
-                    </div>
-                  </div>
+            
+            <div>
+              <h4 className="text-sm font-medium mb-2">Experience</h4>
+              <div className="flex items-center gap-2">
+                <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                  {lawyer.experience}+
                 </div>
-                
-                <div className="mt-6">
-                  <h3 className="text-lg font-semibold mb-2">Office Hours</h3>
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div>
-                      <p className="font-medium">Monday - Friday</p>
-                      <p className="text-muted-foreground">9:30 AM - 6:30 PM</p>
-                    </div>
-                    <div>
-                      <p className="font-medium">Saturday</p>
-                      <p className="text-muted-foreground">10:00 AM - 2:00 PM</p>
-                    </div>
-                    <div>
-                      <p className="font-medium">Sunday</p>
-                      <p className="text-muted-foreground">Closed</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Professional Information</h3>
-                <div className="space-y-3">
-                  <div>
-                    <p className="font-medium">Bar Council Registration</p>
-                    <p className="text-muted-foreground">{lawyer.bar_association || "State Bar Council"}</p>
-                  </div>
-                  
-                  <div>
-                    <p className="font-medium">Practice Areas</p>
-                    <div className="flex flex-wrap gap-2 mt-1">
-                      <Badge variant="outline">{lawyer.domain}</Badge>
-                      <Badge variant="outline">Litigation</Badge>
-                      <Badge variant="outline">Consultation</Badge>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <p className="font-medium">Languages</p>
-                    <p className="text-muted-foreground">English, Hindi, Marathi</p>
-                  </div>
-                  
-                  <div className="mt-4">
-                    <p className="font-medium">Consultation Fees</p>
-                    <div className="mt-2 bg-muted/30 p-3 rounded-md">
-                      <div className="flex justify-between">
-                        <span>Initial Consultation:</span>
-                        <span>₹{Math.round(lawyer.fees_per_hearing * 0.5).toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between mt-1">
-                        <span>Per Hearing:</span>
-                        <span>₹{lawyer.fees_per_hearing.toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between mt-1">
-                        <span>Case Filing:</span>
-                        <span>₹{Math.round(lawyer.fees_per_hearing * 2).toLocaleString()}</span>
-                      </div>
-                    </div>
-                  </div>
+                <div className="text-sm text-muted-foreground">
+                  Years of experience in {lawyer.domain}
                 </div>
               </div>
             </div>
-          </TabsContent>
-        </Tabs>
+            
+            <div>
+              <h4 className="text-sm font-medium mb-2">Availability</h4>
+              <div className="flex gap-1 flex-wrap">
+                <Badge variant="outline" className="bg-green-500/10 text-green-700 hover:bg-green-500/20">
+                  <CalendarIcon size={12} className="mr-1" /> Mon-Fri
+                </Badge>
+                <Badge variant="outline" className="bg-blue-500/10 text-blue-700 hover:bg-blue-500/20">
+                  10:00 AM - 6:00 PM
+                </Badge>
+              </div>
+            </div>
+          </div>
+        </div>
       </CardContent>
       
       {showScheduler && (

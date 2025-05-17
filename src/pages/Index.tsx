@@ -1,245 +1,200 @@
-import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+
+import { Link } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
-import Globe from "@/components/Globe";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { 
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle 
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
-import { initializeSampleData, DOMAINS } from "@/utils/machineLearningSim";
-import { useAuth } from "@/contexts/AuthContext";
+import { ArrowRight, BookOpen, Briefcase, CheckCircle, Gavel, SearchCheck, ShieldCheck, UserCheck } from "lucide-react";
+import Globe from "@/components/Globe";
+import HomeLawyers from "@/components/HomeLawyers";
+import { initializeSampleData } from "@/utils/machineLearningSim";
+import { useEffect } from "react";
 
 const Index = () => {
-  const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
-  const [query, setQuery] = useState("");
-  const heroRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    // Initialize sample data
+    // Initialize sample lawyer data
     initializeSampleData();
-    
-    // Parallax effect on scroll
-    const handleScroll = () => {
-      if (heroRef.current) {
-        const scrollY = window.scrollY;
-        heroRef.current.style.transform = `translateY(${scrollY * 0.4}px)`;
-      }
-    };
-    
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleSearch = () => {
-    navigate(`/find-lawyer?q=${encodeURIComponent(query)}`);
-  };
-
-  const features = [
-    {
-      title: "AI Legal Matching",
-      description: "Our advanced machine learning algorithm matches you with the perfect lawyer for your specific legal needs.",
-      icon: (
-        <div className="rounded-lg p-2 bg-accent/10 text-accent">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-        </div>
-      )
-    },
-    {
-      title: "Verified Professionals",
-      description: "Every lawyer on our platform is thoroughly vetted and verified for credentials, experience and expertise.",
-      icon: (
-        <div className="rounded-lg p-2 bg-accent/10 text-accent">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-          </svg>
-        </div>
-      )
-    },
-    {
-      title: "Transparent Pricing",
-      description: "Clear fee structures with no hidden costs. Know exactly what you're paying for before you commit.",
-      icon: (
-        <div className="rounded-lg p-2 bg-accent/10 text-accent">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
-        </div>
-      )
-    },
-    {
-      title: "Client-Lawyer Matching",
-      description: "Our ML algorithm analyzes your case details to ensure the perfect client-lawyer match every time.",
-      icon: (
-        <div className="rounded-lg p-2 bg-accent/10 text-accent">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16l2.879-2.879m0 0a3 3 0 104.243-4.242 3 3 0 014.243 4.242zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-      )
-    }
-  ];
-
   return (
-    <PageLayout withoutPadding>
-      {/* Hero section with 3D globe */}
-      <section className="relative h-screen lawyermatch-hero">
-        <Globe />
-        
-        <div className="container relative h-full mx-auto px-4 z-10 flex flex-col justify-center items-center">
-          <div 
-            ref={heroRef}
-            className="max-w-4xl text-center space-y-6"
-          >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight animate-fade-in">
-              <span className="text-gradient">AI-Powered</span> Legal Expertise<br />At Your Fingertips
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '100ms' }}>
-              Our advanced machine learning algorithms match you with the perfect lawyer for your specific legal needs, ensuring optimal outcomes for every case.
-            </p>
-            
-            <div 
-              className="max-w-2xl w-full mx-auto mt-8 animate-fade-in flex flex-col gap-4" 
-              style={{ animationDelay: '200ms' }}
-            >
-              <Textarea 
-                placeholder="Describe your legal issue or case..."
-                className="bg-secondary/70 backdrop-blur-md border-secondary"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-              />
-              <div className="flex gap-4">
-                <Button 
-                  size="lg" 
-                  className="w-full"
-                  disabled={!query.trim()}
-                  onClick={handleSearch}
-                >
-                  Find Your Legal Match
-                </Button>
-                
-                {!isAuthenticated && (
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="w-full bg-secondary/70 backdrop-blur-md"
-                    onClick={() => navigate("/register")}
-                  >
-                    Register Now
+    <PageLayout>
+      {/* Hero Section */}
+      <section className="relative">
+        <div className="container mx-auto px-4 py-16 md:py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="order-2 lg:order-1 animate-fade-in">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight">
+                Find the <span className="text-primary">Perfect Legal Expert</span> For Your Case
+              </h1>
+              <p className="text-lg mb-8 text-muted-foreground">
+                Our AI-powered platform matches you with the ideal lawyer for your specific legal needs, saving you time and ensuring the best possible representation.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link to="/find-lawyer">
+                  <Button size="lg" className="w-full sm:w-auto">
+                    Find a Lawyer <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
-                )}
+                </Link>
+                <Link to="/lawyer-register">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto">
+                    Join as a Lawyer
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            <div className="order-1 lg:order-2 flex justify-center">
+              <div className="w-full max-w-md aspect-square">
+                <Globe />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Practice Areas */}
-      <section className="py-20 bg-secondary/50">
+      {/* Featured Lawyers Section */}
+      <HomeLawyers />
+
+      {/* How It Works Section */}
+      <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 animate-slide-up">
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Legal Practice Areas</h2>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">How It Works</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Our platform connects you with expert lawyers across all major legal domains, ensuring you find the right specialist for your specific needs.
+              Our platform simplifies the process of finding the right legal representation in just a few easy steps
             </p>
           </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {["Corporate Law", "Criminal Law", "Family Law", "Civil Law", "Intellectual Property", 
-              "Real Estate Law", "Tax Law", "Constitutional Law", "Environmental Law", "Immigration Law"].map((domain, index) => (
-              <div
-                key={domain}
-                className="animate-scale-in card-3d"
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
-                <Card className="h-full bg-card/70 hover:bg-card/90 transition-colors">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-lg">{domain}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      Find top {domain.toLowerCase()} specialists
-                    </p>
-                  </CardContent>
-                  <CardFooter>
-                    <Button 
-                      variant="ghost" 
-                      className="w-full"
-                      onClick={() => navigate(`/find-lawyer?domain=${encodeURIComponent(domain)}`)}
-                    >
-                      View Lawyers
-                    </Button>
-                  </CardFooter>
-                </Card>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-card rounded-lg p-6 text-center shadow-sm">
+              <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <SearchCheck size={32} />
               </div>
-            ))}
+              <h3 className="text-xl font-bold mb-2">Describe Your Case</h3>
+              <p className="text-muted-foreground">
+                Tell us about your legal issue and requirements in detail to help us find the best match
+              </p>
+            </div>
+            
+            <div className="bg-card rounded-lg p-6 text-center shadow-sm">
+              <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <UserCheck size={32} />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Get Matched</h3>
+              <p className="text-muted-foreground">
+                Our AI algorithm analyzes your needs and matches you with the most suitable lawyers
+              </p>
+            </div>
+            
+            <div className="bg-card rounded-lg p-6 text-center shadow-sm">
+              <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle size={32} />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Schedule Consultation</h3>
+              <p className="text-muted-foreground">
+                Book an appointment with your selected lawyer directly through our platform
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-20">
+      {/* Services Section */}
+      <section className="py-16 bg-secondary/20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 animate-slide-up">
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Why Choose LegalMatch?</h2>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Legal Services We Cover</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Our innovative platform uses cutting-edge technology to transform how you find and work with legal professionals.
+              Our platform connects you with expert lawyers across a wide range of legal domains
             </p>
           </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, index) => (
-              <div
-                key={feature.title}
-                className="animate-scale-in"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <Card className="h-full card-3d">
-                  <CardHeader className="pb-2">
-                    {feature.icon}
-                    <CardTitle className="text-lg mt-4">{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">{feature.description}</p>
-                  </CardContent>
-                </Card>
-              </div>
-            ))}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-card border border-border/50 rounded-lg p-6 hover:shadow-md transition-shadow">
+              <Gavel className="h-8 w-8 text-primary mb-4" />
+              <h3 className="text-xl font-bold mb-2">Corporate Law</h3>
+              <p className="text-muted-foreground mb-4">
+                Expert guidance for businesses on formation, contracts, compliance, and corporate governance
+              </p>
+              <Link to="/find-lawyer?domain=Corporate%20Law" className="text-primary hover:underline inline-flex items-center">
+                Find Specialists <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </div>
+
+            <div className="bg-card border border-border/50 rounded-lg p-6 hover:shadow-md transition-shadow">
+              <ShieldCheck className="h-8 w-8 text-primary mb-4" />
+              <h3 className="text-xl font-bold mb-2">Criminal Law</h3>
+              <p className="text-muted-foreground mb-4">
+                Skilled advocates providing defense and representation in criminal proceedings
+              </p>
+              <Link to="/find-lawyer?domain=Criminal%20Law" className="text-primary hover:underline inline-flex items-center">
+                Find Specialists <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </div>
+
+            <div className="bg-card border border-border/50 rounded-lg p-6 hover:shadow-md transition-shadow">
+              <BookOpen className="h-8 w-8 text-primary mb-4" />
+              <h3 className="text-xl font-bold mb-2">Family Law</h3>
+              <p className="text-muted-foreground mb-4">
+                Compassionate legal support for divorce, child custody, adoption, and family matters
+              </p>
+              <Link to="/find-lawyer?domain=Family%20Law" className="text-primary hover:underline inline-flex items-center">
+                Find Specialists <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </div>
+
+            <div className="bg-card border border-border/50 rounded-lg p-6 hover:shadow-md transition-shadow">
+              <Briefcase className="h-8 w-8 text-primary mb-4" />
+              <h3 className="text-xl font-bold mb-2">Civil Law</h3>
+              <p className="text-muted-foreground mb-4">
+                Resolution of disputes between individuals and organizations through civil proceedings
+              </p>
+              <Link to="/find-lawyer?domain=Civil%20Law" className="text-primary hover:underline inline-flex items-center">
+                Find Specialists <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </div>
+
+            <div className="bg-card border border-border/50 rounded-lg p-6 hover:shadow-md transition-shadow">
+              <ShieldCheck className="h-8 w-8 text-primary mb-4" />
+              <h3 className="text-xl font-bold mb-2">Intellectual Property</h3>
+              <p className="text-muted-foreground mb-4">
+                Protection of creative works, inventions, and business identities through patents and trademarks
+              </p>
+              <Link to="/find-lawyer?domain=Intellectual%20Property" className="text-primary hover:underline inline-flex items-center">
+                Find Specialists <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </div>
+
+            <div className="bg-card border border-border/50 rounded-lg p-6 hover:shadow-md transition-shadow">
+              <Gavel className="h-8 w-8 text-primary mb-4" />
+              <h3 className="text-xl font-bold mb-2">All Legal Services</h3>
+              <p className="text-muted-foreground mb-4">
+                Explore our full range of legal services including tax, real estate, immigration, and more
+              </p>
+              <Link to="/find-lawyer" className="text-primary hover:underline inline-flex items-center">
+                Browse All Services <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 bg-secondary/50">
+      {/* CTA Section */}
+      <section className="py-16 bg-primary/5">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center animate-fade-in">
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">Ready to Find Your Perfect Legal Match?</h2>
-            <p className="text-lg text-muted-foreground mb-8">
-              Join thousands of clients who have found their ideal legal representation through our advanced AI-powered platform.
+          <div className="bg-card border border-border/50 rounded-xl p-8 md:p-12 text-center max-w-4xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Ready to Find Your Legal Match?</h2>
+            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Join thousands of clients who have successfully found the right legal expert for their needs through our platform
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              {!isAuthenticated ? (
-                <Button size="lg" className="px-8" onClick={() => navigate("/register")}>
-                  Sign Up Now
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <Link to="/find-lawyer">
+                <Button size="lg" className="w-full sm:w-auto">
+                  Find a Lawyer Now
                 </Button>
-              ) : (
-                <Button size="lg" className="px-8" onClick={() => navigate("/user-dashboard")}>
-                  Go to Dashboard
+              </Link>
+              <Link to="/about">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                  Learn More About Us
                 </Button>
-              )}
-              <Button size="lg" variant="outline" className="px-8" onClick={() => navigate("/find-lawyer")}>
-                Search Lawyers
-              </Button>
+              </Link>
             </div>
           </div>
         </div>

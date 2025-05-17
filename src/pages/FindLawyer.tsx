@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
@@ -269,7 +270,7 @@ const FindLawyer = () => {
                         <SelectValue placeholder="All domains" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All domains</SelectItem>
+                        <SelectItem value="all">All domains</SelectItem>
                         {DOMAINS.map((d) => (
                           <SelectItem key={d} value={d}>
                             {d}
@@ -288,7 +289,7 @@ const FindLawyer = () => {
                         <SelectValue placeholder="All cities" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All cities</SelectItem>
+                        <SelectItem value="all">All cities</SelectItem>
                         {CITIES.map((c) => (
                           <SelectItem key={c} value={c}>
                             {c}
@@ -307,7 +308,7 @@ const FindLawyer = () => {
                         <SelectValue placeholder="Any gender" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Any gender</SelectItem>
+                        <SelectItem value="all">Any gender</SelectItem>
                         <SelectItem value="male">Male</SelectItem>
                         <SelectItem value="female">Female</SelectItem>
                       </SelectContent>

@@ -9,6 +9,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -26,37 +35,11 @@ import {
   getLawyerData, 
   filterLawyers,
   recommendLawyers,
-  LawyerData
+  LawyerData,
+  DOMAINS,
+  CITIES
 } from "@/utils/machineLearningSim";
 import { useIsMobile } from "@/hooks/use-mobile";
-
-const DOMAINS = [
-  "Corporate Law",
-  "Criminal Law",
-  "Family Law",
-  "Civil Law",
-  "Intellectual Property",
-  "Real Estate Law",
-  "Tax Law",
-  "Constitutional Law",
-  "Environmental Law",
-  "Immigration Law",
-];
-
-const CITIES = [
-  "Mumbai",
-  "Delhi",
-  "Bangalore",
-  "Hyderabad",
-  "Chennai",
-  "Kolkata",
-  "Ahmedabad",
-  "Pune",
-  "Jaipur",
-  "Lucknow",
-  "Chandigarh",
-  "Kochi",
-];
 
 const FindLawyer = () => {
   const isMobile = useIsMobile();
@@ -81,6 +64,10 @@ const FindLawyer = () => {
   const [minRating, setMinRating] = useState(0);
   const [maxFees, setMaxFees] = useState(50000);
   const [sort, setSort] = useState("rating"); // rating, experience, fees-low, fees-high
+  
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const lawyersPerPage = 12; // Display 12 lawyers per page
   
   useEffect(() => {
     const fetchAndProcessData = async () => {
@@ -109,7 +96,7 @@ const FindLawyer = () => {
     
     // AI recommendation based on query
     if (query) {
-      results = recommendLawyers(query, data, 50);
+      results = recommendLawyers(query, data, data.length); // Use all lawyers instead of limiting to 50
     }
     
     // Apply manual filters
@@ -141,6 +128,7 @@ const FindLawyer = () => {
     }
     
     setFilteredLawyers(results);
+    setCurrentPage(1); // Reset to first page when applying new filters
   };
   
   const handleSearch = () => {
@@ -169,6 +157,75 @@ const FindLawyer = () => {
     
     // Reset to all lawyers
     setFilteredLawyers(allLawyers);
+    setCurrentPage(1);
+  };
+  
+  // Get current lawyers
+  const indexOfLastLawyer = currentPage * lawyersPerPage;
+  const indexOfFirstLawyer = indexOfLastLawyer - lawyersPerPage;
+  const currentLawyers = filteredLawyers.slice(indexOfFirstLawyer, indexOfLastLawyer);
+  
+  // Calculate page numbers
+  const totalPages = Math.ceil(filteredLawyers.length / lawyersPerPage);
+  
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+    
+    let pages = [];
+    if (totalPages <= 5) {
+      // Show all page numbers if 5 or fewer
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Show first page, current page ±1, last page
+      pages.push(1);
+      if (currentPage > 3) pages.push("ellipsis");
+      if (currentPage > 2) pages.push(currentPage - 1);
+      if (currentPage !== 1 && currentPage !== totalPages) pages.push(currentPage);
+      if (currentPage < totalPages - 1) pages.push(currentPage + 1);
+      if (currentPage < totalPages - 2) pages.push("ellipsis");
+      pages.push(totalPages);
+    }
+    
+    return (
+      <Pagination className="mt-8">
+        <PaginationContent>
+          {currentPage > 1 && (
+            <PaginationItem>
+              <PaginationPrevious onClick={() => setCurrentPage(currentPage - 1)} />
+            </PaginationItem>
+          )}
+          
+          {pages.map((page, index) => {
+            if (page === "ellipsis") {
+              return (
+                <PaginationItem key={`ellipsis-${index}`}>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              );
+            }
+            
+            return (
+              <PaginationItem key={`page-${page}`}>
+                <PaginationLink
+                  isActive={currentPage === page}
+                  onClick={() => setCurrentPage(page as number)}
+                >
+                  {page}
+                </PaginationLink>
+              </PaginationItem>
+            );
+          })}
+          
+          {currentPage < totalPages && (
+            <PaginationItem>
+              <PaginationNext onClick={() => setCurrentPage(currentPage + 1)} />
+            </PaginationItem>
+          )}
+        </PaginationContent>
+      </Pagination>
+    );
   };
 
   return (
@@ -213,7 +270,7 @@ const FindLawyer = () => {
                         <SelectValue placeholder="All domains" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All domains</SelectItem>
+                        <SelectItem value="">All domains</SelectItem>
                         {DOMAINS.map((d) => (
                           <SelectItem key={d} value={d}>
                             {d}
@@ -232,7 +289,7 @@ const FindLawyer = () => {
                         <SelectValue placeholder="All cities" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All cities</SelectItem>
+                        <SelectItem value="">All cities</SelectItem>
                         {CITIES.map((c) => (
                           <SelectItem key={c} value={c}>
                             {c}
@@ -251,9 +308,9 @@ const FindLawyer = () => {
                         <SelectValue placeholder="Any gender" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="any">Any gender</SelectItem>
-                        <SelectItem value="Male">Male</SelectItem>
-                        <SelectItem value="Female">Female</SelectItem>
+                        <SelectItem value="">Any gender</SelectItem>
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
                       </SelectContent>
                     </Select>
                   </AccordionContent>
@@ -399,7 +456,7 @@ const FindLawyer = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {filteredLawyers.slice(0, 30).map((lawyer, index) => (
+                {currentLawyers.map((lawyer, index) => (
                   <div 
                     key={lawyer.id} 
                     className="animate-scale-in" 
@@ -411,11 +468,8 @@ const FindLawyer = () => {
               </div>
             )}
             
-            {filteredLawyers.length > 30 && (
-              <div className="flex justify-center mt-8">
-                <Button variant="outline">Load More</Button>
-              </div>
-            )}
+            {/* Pagination */}
+            {!loading && filteredLawyers.length > 0 && renderPagination()}
           </div>
         </div>
       </div>

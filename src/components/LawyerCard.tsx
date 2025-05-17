@@ -24,6 +24,7 @@ interface LawyerCardProps {
     law_school?: string;
     bar_association?: string;
     profileImage?: string;
+    contact_number?: string;
   };
 }
 

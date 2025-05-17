@@ -86,6 +86,7 @@ export const SAMPLE_LAWYERS = [
     city: "Mumbai",
     law_school: "National Law School of India University, Bangalore",
     bar_association: "Bar Council of Maharashtra and Goa",
+    contact_number: "+91 98765 43210",
   },
   {
     id: "lawyer2",
@@ -102,6 +103,7 @@ export const SAMPLE_LAWYERS = [
     city: "Delhi",
     law_school: "Faculty of Law, Delhi University",
     bar_association: "Delhi Bar Association",
+    contact_number: "+91 87654 32109",
   },
   {
     id: "lawyer3",
@@ -118,6 +120,7 @@ export const SAMPLE_LAWYERS = [
     city: "Bangalore",
     law_school: "ILS Law College, Pune",
     bar_association: "Karnataka State Bar Council",
+    contact_number: "+91 76543 21098",
   },
   // Generating more lawyers for each domain
   ...generateLawyers()
@@ -145,8 +148,8 @@ function generateLawyers() {
   
   // Generate lawyers for each domain
   DOMAINS.forEach(domain => {
-    // Generate approximately 10-15 lawyers per domain
-    const numLawyers = Math.floor(Math.random() * 6) + 10;
+    // Generate approximately 20-25 lawyers per domain to reach 200+ total
+    const numLawyers = Math.floor(Math.random() * 6) + 20;
     
     for (let i = 0; i < numLawyers; i++) {
       const gender = Math.random() > 0.5 ? "male" : "female";
@@ -194,6 +197,9 @@ function generateLawyers() {
       const lawSchool = LAW_SCHOOLS[Math.floor(Math.random() * LAW_SCHOOLS.length)];
       const barAssociation = BAR_ASSOCIATIONS[Math.floor(Math.random() * BAR_ASSOCIATIONS.length)];
       
+      // Generate contact number
+      const contactNumber = `+91 ${Math.floor(Math.random() * 90000) + 10000} ${Math.floor(Math.random() * 90000) + 10000}`;
+      
       lawyers.push({
         id: `lawyer${idCounter++}`,
         first_name: firstName,
@@ -208,7 +214,8 @@ function generateLawyers() {
         total_cases: totalCases,
         city: city,
         law_school: lawSchool,
-        bar_association: barAssociation
+        bar_association: barAssociation,
+        contact_number: contactNumber
       });
     }
   });

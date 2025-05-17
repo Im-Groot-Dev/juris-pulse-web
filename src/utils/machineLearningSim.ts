@@ -32,6 +32,16 @@ export const LAW_SCHOOLS = [
   "Rajiv Gandhi National University of Law, Patiala",
   "Chanakya National Law University, Patna",
   "National Law University Odisha, Cuttack",
+  "Dr. Ram Manohar Lohiya National Law University, Lucknow",
+  "Hidayatullah National Law University, Raipur",
+  "Maharashtra National Law University, Mumbai",
+  "National Law Institute University, Bhopal",
+  "Tamil Nadu National Law University, Tiruchirappalli",
+  "Damodaram Sanjivayya National Law University, Visakhapatnam",
+  "Maharashtra National Law University, Nagpur",
+  "Maharashtra National Law University, Aurangabad",
+  "Himachal Pradesh National Law University, Shimla",
+  "Dharmashastra National Law University, Jabalpur",
 ];
 
 // Define bar associations
@@ -50,6 +60,20 @@ export const BAR_ASSOCIATIONS = [
   "Bar Council of Uttar Pradesh",
   "Calcutta High Court Bar Association",
   "Gujarat Bar Council",
+  "Rajasthan Bar Council",
+  "Odisha Bar Council",
+  "Telangana Bar Council",
+  "Andhra Pradesh Bar Council",
+  "Bihar Bar Council",
+  "Jharkhand Bar Council",
+  "Chhattisgarh Bar Council",
+  "Haryana Bar Council",
+  "Himachal Pradesh Bar Council",
+  "Uttarakhand Bar Council",
+  "Madhya Pradesh Bar Council",
+  "Jammu & Kashmir Bar Council",
+  "Assam Bar Council",
+  "Northeast Bar Council",
 ];
 
 // Define cities
@@ -66,6 +90,19 @@ export const CITIES = [
   "Lucknow",
   "Chandigarh",
   "Kochi",
+  "Guwahati",
+  "Bhopal",
+  "Indore",
+  "Nagpur",
+  "Coimbatore",
+  "Surat",
+  "Patna",
+  "Ranchi",
+  "Visakhapatnam",
+  "Vadodara",
+  "Thiruvananthapuram",
+  "Dehradun",
+  "Raipur",
 ];
 
 // Sample lawyer data for demonstration
@@ -129,24 +166,115 @@ function generateLawyers() {
   let idCounter = 4; // Start after the original 3 lawyers
   
   // List of first names
-  const maleFirstNames = ["Amit", "Vikram", "Suresh", "Rohit", "Rahul", "Sanjay", "Deepak", "Ajay", "Vijay", "Nitin", 
-    "Prakash", "Anil", "Sunil", "Rakesh", "Vivek", "Mahesh", "Dinesh", "Rajiv", "Manoj", "Ashok", "Pankaj", "Vinod", 
-    "Manish", "Ravi", "Jayesh", "Bharat", "Sachin", "Surya", "Aditya", "Karan", "Siddharth", "Rohan", "Neeraj", "Tushar", "Arun"];
+  const maleFirstNames = [
+    "Amit", "Vikram", "Suresh", "Rohit", "Rahul", "Sanjay", "Deepak", "Ajay", "Vijay", "Nitin", 
+    "Prakash", "Anil", "Sunil", "Rakesh", "Vivek", "Mahesh", "Dinesh", "Rajiv", "Manoj", "Ashok", 
+    "Pankaj", "Vinod", "Manish", "Ravi", "Jayesh", "Bharat", "Sachin", "Surya", "Aditya", "Karan", 
+    "Siddharth", "Rohan", "Neeraj", "Tushar", "Arun", "Arjun", "Kartik", "Vikas", "Anand", "Alok",
+    "Sanjeev", "Aniket", "Abhishek", "Dhruv", "Gaurav", "Harish", "Ishaan", "Jatin", "Krishna", "Lalit",
+    "Mukesh", "Naveen", "Pranav", "Ramesh", "Sameer", "Tarun", "Uday", "Varun", "Yash", "Zubin",
+    "Aakash", "Chirag", "Dev", "Farhan", "Girish", "Hitesh", "Imran", "Jai", "Kamal", "Lokesh"
+  ];
     
-  const femaleFirstNames = ["Sneha", "Anjali", "Kritika", "Kavita", "Divya", "Pooja", "Anamika", "Neha", "Meera", "Sunita", 
-    "Radha", "Smita", "Nandini", "Anita", "Swati", "Jaya", "Ritu", "Preeti", "Seema", "Shreya", "Aarti", "Monica", "Varsha", 
-    "Rekha", "Jyoti", "Shikha", "Sarika", "Manisha", "Ananya", "Ishita", "Nidhi", "Garima", "Shweta", "Deepika", "Shilpa"];
+  const femaleFirstNames = [
+    "Sneha", "Anjali", "Kritika", "Kavita", "Divya", "Pooja", "Anamika", "Neha", "Meera", "Sunita", 
+    "Radha", "Smita", "Nandini", "Anita", "Swati", "Jaya", "Ritu", "Preeti", "Seema", "Shreya", 
+    "Aarti", "Monica", "Varsha", "Rekha", "Jyoti", "Shikha", "Sarika", "Manisha", "Ananya", "Ishita", 
+    "Nidhi", "Garima", "Shweta", "Deepika", "Shilpa", "Aditi", "Bhavna", "Chitra", "Dipti", "Eesha",
+    "Falguni", "Gayatri", "Himani", "Isha", "Juhi", "Kalpana", "Lata", "Mala", "Naina", "Pallavi",
+    "Rachna", "Sandhya", "Tanvi", "Uma", "Vidya", "Aparna", "Barkha", "Chhaya", "Disha", "Ekta",
+    "Falak", "Gauri", "Hina", "Indira", "Jasmine", "Kamala", "Leela", "Meghna", "Nisha", "Ojaswi"
+  ];
     
   // List of last names
-  const lastNames = ["Patel", "Shah", "Reddy", "Singh", "Kumar", "Joshi", "Sharma", "Verma", "Gupta", "Nair", 
+  const lastNames = [
+    "Patel", "Shah", "Reddy", "Singh", "Kumar", "Joshi", "Sharma", "Verma", "Gupta", "Nair", 
     "Iyer", "Deshmukh", "Patil", "Agarwal", "Choudhury", "Malhotra", "Kapoor", "Bhat", "Hegde", "Chatterjee", 
-    "Banerjee", "Kaur", "Trivedi", "Goyal", "Saxena", "Sethi", "Arora", "Mehta", "Das", "Chopra", "Khanna", 
-    "Rao", "Menon", "Bose", "Naidu", "Kulkarni", "Jain", "Chakraborty", "Sengupta", "Bhatia", "Yadav", "Rathore"];
+    "Banerjee", "Kaur", "Trivedi", "Goyal", "Saxena", "Sethi", "Arora", "Mehta", "Das", "Chopra", 
+    "Khanna", "Rao", "Menon", "Bose", "Naidu", "Kulkarni", "Jain", "Chakraborty", "Sengupta", "Bhatia", 
+    "Yadav", "Rathore", "Chauhan", "Dubey", "Pillai", "Krishnamurthy", "Venkatesh", "Shukla", "Mishra", "Tiwari",
+    "Pandey", "Roy", "Dutta", "Biswas", "Ganguly", "Mukherjee", "Sarkar", "Sinha", "Thapar", "Mahajan",
+    "Chahal", "Basu", "Goel", "Mathur", "Lal", "Khurana", "Bajaj", "Dhawan", "Grewal", "Nagpal",
+    "Khatri", "Anand", "Bhalla", "Vishnoi", "Chawla", "Sanghvi", "Dewan", "Ahuja", "Bhargava", "Grover"
+  ];
+
+  // Genrate unique interests based on legal domains
+  const interestsByDomain = {
+    "Corporate Law": ["Mergers & Acquisitions", "Securities Regulation", "Corporate Governance", "International Business Law", "Compliance", "Venture Capital", "Financial Regulations", "Joint Ventures", "Shareholder Rights", "Capital Markets"],
+    "Criminal Law": ["White Collar Crime", "Criminal Defense", "Cybercrime", "Juvenile Justice", "Forensic Evidence", "Appeals", "Drug Offenses", "Criminal Procedure", "Domestic Violence", "MCOCA"],
+    "Family Law": ["Divorce", "Child Custody", "Adoption", "Domestic Violence", "Alimony", "Child Support", "Paternity", "Guardian Law", "Prenuptial Agreements", "Succession Planning"],
+    "Civil Law": ["Personal Injury", "Torts", "Medical Malpractice", "Product Liability", "Consumer Protection", "Contract Disputes", "Civil Procedure", "Alternative Dispute Resolution", "Negligence", "Property Disputes"],
+    "Intellectual Property": ["Patent Law", "Trademark Law", "Copyright", "Trade Secrets", "IP Litigation", "Technology Licensing", "Entertainment Law", "Media Law", "IP Portfolio Management", "Domain Name Disputes"],
+    "Real Estate Law": ["Land Acquisition", "Property Registration", "Rental Agreements", "Construction Law", "Zoning", "Environmental Compliance", "Title Disputes", "Real Estate Finance", "Commercial Leasing", "Affordable Housing"],
+    "Tax Law": ["Direct Taxation", "GST", "International Taxation", "Tax Planning", "Tax Disputes", "Corporate Taxation", "Income Tax Appeals", "Tax Compliance", "Tax Audits", "Cross-border Taxation"],
+    "Constitutional Law": ["Fundamental Rights", "Public Interest Litigation", "Administrative Law", "Election Law", "Constitutional Remedies", "Interpretation of Statutes", "Federal Disputes", "Separation of Powers", "Civil Liberties", "Judicial Review"],
+    "Environmental Law": ["Climate Change Litigation", "Environmental Compliance", "Natural Resources", "Wildlife Protection", "Pollution Control", "Environmental Impact Assessment", "Energy Law", "Forest Conservation", "Water Rights", "Green Regulations"],
+    "Immigration Law": ["Visas", "Citizenship", "Asylum", "Deportation Defense", "Work Permits", "Family Immigration", "Business Immigration", "Immigration Compliance", "Refugee Law", "Student Visas"]
+  };
+  
+  // Generate realistic bios for lawyers based on their domain and experience
+  function generateBio(lawyer) {
+    const { first_name, last_name, domain, experience, law_school, city, gender } = lawyer;
+    const pronoun = gender === 'male' ? 'He' : 'She';
+    const possessive = gender === 'male' ? 'his' : 'her';
+    
+    const domainInterests = interestsByDomain[domain] || [];
+    const specializations = [];
+    for (let i = 0; i < 3; i++) {
+      const randomIndex = Math.floor(Math.random() * domainInterests.length);
+      if (!specializations.includes(domainInterests[randomIndex])) {
+        specializations.push(domainInterests[randomIndex]);
+      }
+    }
+    
+    const specializationText = specializations.length > 0 
+      ? `specializing in ${specializations.slice(0, -1).join(", ")} ${specializations.length > 1 ? 'and ' + specializations[specializations.length - 1] : specializations[0]}`
+      : '';
+    
+    const introTemplates = [
+      `${first_name} ${last_name} is an accomplished ${domain} attorney with ${experience} years of experience ${specializationText}.`,
+      `With ${experience} years of legal expertise, ${first_name} ${last_name} is a dedicated ${domain} lawyer ${specializationText}.`,
+      `${first_name} is a respected ${domain} practitioner with ${experience} years in the field ${specializationText}.`
+    ];
+    
+    const educationTemplates = [
+      `${pronoun} graduated from ${law_school} and has built a strong reputation in the legal community.`,
+      `A proud alumnus of ${law_school}, ${pronoun.toLowerCase()} has established ${possessive} practice with integrity and dedication.`,
+      `After completing ${possessive} education at ${law_school}, ${pronoun.toLowerCase()} has become a prominent figure in ${city}'s legal circles.`
+    ];
+    
+    const achievementTemplates = [
+      `${pronoun} has successfully represented clients in numerous landmark cases and is known for ${possessive} thorough approach.`,
+      `Known for ${possessive} strategic thinking and attention to detail, ${pronoun.toLowerCase()} has achieved favorable outcomes for clients in complex legal matters.`,
+      `${pronoun} has built a track record of success through ${possessive} diligent preparation and passionate advocacy.`
+    ];
+    
+    const conclusionTemplates = [
+      `Based in ${city}, ${first_name} is committed to providing personalized legal solutions tailored to each client's unique needs.`,
+      `From ${possessive} office in ${city}, ${first_name} continues to offer exceptional legal counsel with a client-centered approach.`,
+      `${first_name} practices in ${city} and is dedicated to achieving the best possible outcomes while maintaining the highest ethical standards.`
+    ];
+    
+    const intro = introTemplates[Math.floor(Math.random() * introTemplates.length)];
+    const education = educationTemplates[Math.floor(Math.random() * educationTemplates.length)];
+    const achievement = achievementTemplates[Math.floor(Math.random() * achievementTemplates.length)];
+    const conclusion = conclusionTemplates[Math.floor(Math.random() * conclusionTemplates.length)];
+    
+    return `${intro} ${education} ${achievement} ${conclusion}`;
+  }
+  
+  // Generate random contact numbers in Indian format
+  function generateContactNumber() {
+    const prefixes = ['70', '72', '73', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90', '91', '92', '93', '94', '95', '96', '97', '98', '99'];
+    const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+    const remainingDigits = Math.floor(Math.random() * 100000000).toString().padStart(8, '0');
+    return `+91 ${prefix}${remainingDigits}`;
+  }
   
   // Generate lawyers for each domain
   DOMAINS.forEach(domain => {
-    // Generate approximately 10-15 lawyers per domain
-    const numLawyers = Math.floor(Math.random() * 6) + 10;
+    // Generate 100-120 lawyers per domain for a total of 1000+ lawyers
+    const numLawyers = Math.floor(Math.random() * 21) + 100;
     
     for (let i = 0; i < numLawyers; i++) {
       const gender = Math.random() > 0.5 ? "male" : "female";
@@ -158,8 +286,11 @@ function generateLawyers() {
       // Generate unique email
       const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${Math.floor(Math.random() * 999)}@example.com`;
       
-      // Generate random experience between 3 and 25 years
-      const experience = Math.floor(Math.random() * 22) + 3;
+      // Generate random experience between 3 and 40 years
+      const experience = Math.floor(Math.random() * 37) + 3;
+      
+      // Generate age based on experience (typically starts practicing at 25)
+      const age = experience + 25 + Math.floor(Math.random() * 3);
       
       // Generate fees based on experience and domain
       let baseFee = 0;
@@ -194,12 +325,13 @@ function generateLawyers() {
       const lawSchool = LAW_SCHOOLS[Math.floor(Math.random() * LAW_SCHOOLS.length)];
       const barAssociation = BAR_ASSOCIATIONS[Math.floor(Math.random() * BAR_ASSOCIATIONS.length)];
       
-      lawyers.push({
+      const lawyerData = {
         id: `lawyer${idCounter++}`,
         first_name: firstName,
         last_name: lastName,
         email: email,
         gender: gender,
+        age: age,
         experience: experience,
         domain: domain,
         fees_per_hearing: fees,
@@ -209,7 +341,12 @@ function generateLawyers() {
         city: city,
         law_school: lawSchool,
         bar_association: barAssociation
-      });
+      };
+
+      // Add a contact number
+      lawyerData.contact_number = generateContactNumber();
+      
+      lawyers.push(lawyerData);
     }
   });
   
@@ -219,15 +356,15 @@ function generateLawyers() {
 // Define LawyerData type for use throughout the app
 export interface LawyerData {
   id: string;
-  name: string;
+  name?: string;
   profileImage?: string;
   email: string;
   domain: string;
   experience: number;
   fees_per_hearing: number;
   rating: number;
-  cases_won: number;
-  total_cases: number;
+  cases_won?: number;
+  total_cases?: number;
   city: string;
   bio?: string;
   contact_number?: string;
@@ -236,6 +373,7 @@ export interface LawyerData {
   gender?: string;
   first_name?: string;
   last_name?: string;
+  age?: number;
 }
 
 // Function to initialize sample data in localStorage
@@ -247,12 +385,20 @@ export const initializeSampleData = () => {
   // Initialize sample lawyers
   SAMPLE_LAWYERS.forEach((lawyer) => {
     const lawyerId = lawyer.id;
+    
+    // Generate a bio if one doesn't exist
+    const bio = lawyer.bio || generateBio(lawyer);
+    
+    // Generate a seed for consistent avatar generation
+    const avatarSeed = `${lawyer.first_name}${lawyer.email}`;
+    
     const profile = {
       ...lawyer,
+      bio: bio,
       appointments: [],
       clients: [],
       reviews: [],
-      profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${lawyer.first_name}${lawyer.email}`,
+      profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${avatarSeed}`,
     };
     
     localStorage.setItem(`lawyer_${lawyerId}`, JSON.stringify(profile));
@@ -261,6 +407,31 @@ export const initializeSampleData = () => {
   // Mark as initialized
   localStorage.setItem('sampleDataInitialized', 'true');
 };
+
+// Helper function to generate a bio for a lawyer
+function generateBio(lawyer) {
+  const { first_name, last_name, domain, experience, law_school, city, gender } = lawyer;
+  const pronoun = gender === 'male' ? 'He' : 'She';
+  const possessive = gender === 'male' ? 'his' : 'her';
+  
+  const domainInterests = {
+    "Corporate Law": ["Mergers & Acquisitions", "Securities Regulation", "Corporate Governance"],
+    "Criminal Law": ["White Collar Crime", "Criminal Defense", "Cybercrime"],
+    "Family Law": ["Divorce", "Child Custody", "Adoption"],
+    "Civil Law": ["Personal Injury", "Torts", "Medical Malpractice"],
+    "Intellectual Property": ["Patent Law", "Trademark Law", "Copyright"],
+    "Real Estate Law": ["Land Acquisition", "Property Registration", "Rental Agreements"],
+    "Tax Law": ["Direct Taxation", "GST", "International Taxation"],
+    "Constitutional Law": ["Fundamental Rights", "Public Interest Litigation", "Administrative Law"],
+    "Environmental Law": ["Climate Change Litigation", "Environmental Compliance", "Natural Resources"],
+    "Immigration Law": ["Visas", "Citizenship", "Asylum"]
+  };
+  
+  const interests = domainInterests[domain] || [];
+  const specialization = interests[Math.floor(Math.random() * interests.length)];
+  
+  return `${first_name} ${last_name} is a specialized ${domain} lawyer with ${experience} years of experience, focusing on ${specialization}. ${pronoun} graduated from ${law_school} and practices primarily in ${city}. With a track record of success and dedication to clients, ${pronoun.toLowerCase()} provides expert legal counsel and representation.`;
+}
 
 // Function to match lawyers based on user query
 export const findMatchingLawyers = (query: string) => {
@@ -301,13 +472,14 @@ export const getLawyerData = (): LawyerData[] => {
           cases_won: parsedLawyer.cases_won,
           total_cases: parsedLawyer.total_cases,
           city: parsedLawyer.city,
-          bio: parsedLawyer.bio || `${parsedLawyer.first_name} is a specialized ${parsedLawyer.domain} lawyer with ${parsedLawyer.experience} years of experience.`,
+          bio: parsedLawyer.bio || generateBio(parsedLawyer),
           contact_number: parsedLawyer.contact_number,
           law_school: parsedLawyer.law_school,
           bar_association: parsedLawyer.bar_association,
           gender: parsedLawyer.gender,
           first_name: parsedLawyer.first_name,
-          last_name: parsedLawyer.last_name
+          last_name: parsedLawyer.last_name,
+          age: parsedLawyer.age
         });
       } catch (error) {
         console.error("Failed to parse lawyer data:", error);
@@ -341,13 +513,14 @@ export const getLawyerData = (): LawyerData[] => {
             cases_won: parsedLawyer.cases_won,
             total_cases: parsedLawyer.total_cases,
             city: parsedLawyer.city,
-            bio: parsedLawyer.bio || `${parsedLawyer.first_name} is a specialized ${parsedLawyer.domain} lawyer with ${parsedLawyer.experience} years of experience.`,
+            bio: parsedLawyer.bio || generateBio(parsedLawyer),
             contact_number: parsedLawyer.contact_number,
             law_school: parsedLawyer.law_school,
             bar_association: parsedLawyer.bar_association,
             gender: parsedLawyer.gender,
             first_name: parsedLawyer.first_name,
-            last_name: parsedLawyer.last_name
+            last_name: parsedLawyer.last_name,
+            age: parsedLawyer.age
           });
         }
       } catch (error) {
@@ -434,7 +607,8 @@ export const recommendLawyers = (
     }
     
     // Check name match
-    if (lawyer.name.toLowerCase().includes(query)) {
+    const fullName = lawyer.name || `${lawyer.first_name} ${lawyer.last_name}`;
+    if (fullName.toLowerCase().includes(query)) {
       score += 80;
     }
     
@@ -451,7 +625,7 @@ export const recommendLawyers = (
       }
       
       // Name word matches
-      if (lawyer.name.toLowerCase().includes(word)) {
+      if (fullName.toLowerCase().includes(word)) {
         score += 25;
       }
       

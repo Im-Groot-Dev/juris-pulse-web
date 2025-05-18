@@ -17,6 +17,9 @@ export interface AppointmentData {
   status: 'scheduled' | 'completed' | 'cancelled';
   notes?: string;
   domain: string;
+  clientName?: string;
+  clientEmail?: string;
+  clientPhone?: string;
 }
 
 interface AuthContextType {

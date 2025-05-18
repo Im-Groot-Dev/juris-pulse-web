@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -58,35 +57,35 @@ const Globe = ({ className = "" }: GlobeProps) => {
     const specularMap = textureLoader.load("/earth-specular.jpg");
     const cloudsTexture = textureLoader.load("/earth-clouds.png");
     
-    // Improved Earth material with better lighting properties
+    // Improved Earth material with better realistic colors
     const earthMaterial = new THREE.MeshPhongMaterial({
       map: earthTexture,
       bumpMap: bumpMap,
       bumpScale: 0.8,
       specularMap: specularMap,
-      specular: new THREE.Color(0x444444),
-      shininess: 10,
+      specular: new THREE.Color(0x333333),
+      shininess: 15,
     });
     
     const earth = new THREE.Mesh(earthGeometry, earthMaterial);
     scene.add(earth);
     
-    // Add clouds layer
+    // Add clouds layer with more realistic opacity
     const cloudsGeometry = new THREE.SphereGeometry(51, 128, 128);
     const cloudsMaterial = new THREE.MeshPhongMaterial({
       map: cloudsTexture,
       transparent: true,
-      opacity: 0.4,
+      opacity: 0.35,
       side: THREE.DoubleSide,
       depthWrite: false,
     });
     const clouds = new THREE.Mesh(cloudsGeometry, cloudsMaterial);
     scene.add(clouds);
     
-    // Add atmosphere with more realistic glow
+    // Add atmosphere with more realistic blue glow
     const atmosphereGeometry = new THREE.SphereGeometry(54, 128, 128);
     const atmosphereMaterial = new THREE.MeshPhongMaterial({
-      color: 0xa3d9ff,
+      color: 0x0EA5E9, // More realistic ocean blue
       transparent: true,
       opacity: 0.15,
       side: THREE.BackSide,
@@ -118,19 +117,19 @@ const Globe = ({ className = "" }: GlobeProps) => {
     const stars = new THREE.Points(starGeometry, starMaterial);
     scene.add(stars);
     
-    // Enhanced lighting for professional appearance
-    const ambientLight = new THREE.AmbientLight(0x333333);
+    // Enhanced lighting for realistic earth illumination
+    const ambientLight = new THREE.AmbientLight(0x555555); // Brighter ambient light
     scene.add(ambientLight);
     
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2); // Slightly stronger directional light
     directionalLight.position.set(5, 3, 5);
     scene.add(directionalLight);
     
-    const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.2);
+    const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.3);
     scene.add(hemisphereLight);
     
-    // Add location markers with improved appearance
-    const addLocationMarker = (lat: number, lng: number, size = 0.5, color = 0x7efa91) => {
+    // Add location markers with more earth-like colors
+    const addLocationMarker = (lat: number, lng: number, size = 0.5, color = 0x4ADE80) => {
       // Convert latitude and longitude to 3D coordinates
       const phi = (90 - lat) * (Math.PI / 180);
       const theta = (lng + 180) * (Math.PI / 180);
@@ -191,10 +190,10 @@ const Globe = ({ className = "" }: GlobeProps) => {
     ];
     
     const markers = locations.map(loc => 
-      addLocationMarker(loc.lat, loc.lng, 0.5, 0x7efa91)
+      addLocationMarker(loc.lat, loc.lng, 0.5, 0x4ADE80)
     );
     
-    // Create enhanced connection lines between locations
+    // Create enhanced connection lines between locations with earth-like colors
     const createConnectionLine = (fromLat: number, fromLng: number, toLat: number, toLng: number) => {
       // Convert coordinates to 3D positions
       const fromPhi = (90 - fromLat) * (Math.PI / 180);
@@ -236,7 +235,7 @@ const Globe = ({ className = "" }: GlobeProps) => {
       const curve = new THREE.CatmullRomCurve3(curvePoints);
       const geometry = new THREE.TubeGeometry(curve, 128, 0.05, 8, false);
       const material = new THREE.MeshBasicMaterial({
-        color: 0x7efa91,
+        color: 0x4ADE80,
         transparent: true,
         opacity: 0.4
       });

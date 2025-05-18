@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 import { User, Role } from '../types/user';
 import { toast } from "sonner";
@@ -87,7 +88,7 @@ interface LawyerProfile extends LawyerRegistrationData {
 // Create a context to store lawyer profiles for demo purposes
 const LawyerProfiles: Record<string, LawyerProfile> = {};
 const UserProfiles: Record<string, UserProfile> = {};
-const RegisteredUsers: Record<string, {password: string, role: Role}> = {};
+const RegisteredUsers: Record<string, {password: string, role: Role, name: string}> = {};
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -154,6 +155,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     refreshUser();
   }, [refreshUser]);
 
+  // Load registered users from localStorage on mount
+  React.useEffect(() => {
+    const storedUsers = localStorage.getItem('registeredUsers');
+    if (storedUsers) {
+      try {
+        const parsedUsers = JSON.parse(storedUsers);
+        Object.assign(RegisteredUsers, parsedUsers);
+      } catch (error) {
+        console.error('Failed to parse registered users from localStorage:', error);
+      }
+    }
+  }, []);
+
   // Function to update user profile
   const updateUserProfile = (data: Partial<UserProfile>) => {
     if (!user) {
@@ -180,26 +194,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     
     try {
       // Validate credentials against registered users
-      const userExists = Object.entries(RegisteredUsers).find(
-        ([userEmail, data]) => userEmail === email && data.password === password
-      );
-      
-      if (!userExists) {
+      if (!RegisteredUsers[email] || RegisteredUsers[email].password !== password) {
         throw new Error("Invalid email or password");
       }
       
-      // Find user data in localStorage for existing users
-      const storedUsers = localStorage.getItem('registeredUsers');
-      const users = storedUsers ? JSON.parse(storedUsers) : {};
-      
-      // Determine role from registration data
-      const role = userExists[1].role;
+      // Get user data from registration
+      const userData = RegisteredUsers[email];
+      const userId = email.replace(/[^a-zA-Z0-9]/g, '');
       
       const mockUser: User = {
-        id: email.replace(/[^a-zA-Z0-9]/g, ''),
-        name: email.split('@')[0],
+        id: userId,
+        name: userData.name || email.split('@')[0],
         email,
-        role,
+        role: userData.role,
         profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${email}`,
       };
       
@@ -242,10 +249,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     
     try {
       // Check if user already exists
-      const storedUsers = localStorage.getItem('registeredUsers');
-      const users = storedUsers ? JSON.parse(storedUsers) : {};
-      
-      if (users[email]) {
+      if (RegisteredUsers[email]) {
         throw new Error("User with this email already exists");
       }
       
@@ -255,7 +259,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       // Register the new user
       RegisteredUsers[email] = {
         password,
-        role
+        role,
+        name
       };
       
       // Save to localStorage for persistence

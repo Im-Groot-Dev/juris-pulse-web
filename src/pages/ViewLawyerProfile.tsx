@@ -2,9 +2,10 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
-import LawyerProfile from "@/components/LawyerProfile";
+import LawyerProfile from "@/components/LawyerDetailsProfile";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface LawyerData {
   id: string;
@@ -84,6 +85,7 @@ const ViewLawyerProfile = () => {
   const navigate = useNavigate();
   const [lawyer, setLawyer] = useState<LawyerData | null>(null);
   const [loading, setLoading] = useState(true);
+  const { isAuthenticated } = useAuth();
   
   useEffect(() => {
     // In a real app, this would fetch data from an API
@@ -101,6 +103,17 @@ const ViewLawyerProfile = () => {
       }, 500); // Simulate network delay
     }
   }, [id, navigate]);
+  
+  const handleAppointmentClick = () => {
+    if (!isAuthenticated) {
+      toast.error("Please log in to schedule an appointment");
+      navigate("/login", { state: { from: `/lawyer/${id}` } });
+      return;
+    }
+    
+    // Navigate to the appointment page
+    navigate(`/appointment/${id}`);
+  };
   
   if (loading) {
     return (
@@ -148,7 +161,7 @@ const ViewLawyerProfile = () => {
           <p className="text-muted-foreground">View detailed information and schedule appointments</p>
         </div>
         
-        <LawyerProfile lawyer={lawyer} />
+        <LawyerProfile lawyer={lawyer} onScheduleAppointment={handleAppointmentClick} />
       </div>
     </PageLayout>
   );

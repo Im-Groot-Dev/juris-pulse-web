@@ -15,6 +15,7 @@ import Services from "./pages/Services";
 import About from "./pages/About";
 import Pricing from "./pages/Pricing";
 import Resources from "./pages/Resources";
+import ResourceDetail from "./pages/ResourceDetail";
 import UserDashboard from "./pages/UserDashboard";
 import LawyerDashboard from "./pages/LawyerDashboard";
 import FindLawyer from "./pages/FindLawyer";
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/resources" element={<Resources />} />
+            <Route path="/resources/:type/:id" element={<ResourceDetail />} />
             <Route path="/company" element={<Company />} />
             <Route path="/find-lawyer" element={<FindLawyer />} />
             <Route path="/lawyer/:id" element={<ViewLawyerProfile />} />

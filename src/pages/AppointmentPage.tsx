@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { toast } from "sonner";
 import AppointmentScheduler from "@/components/AppointmentScheduler";
 import { useAuth, AppointmentData } from "@/contexts/AuthContext";
+import { ArrowLeft, Briefcase, MapPin } from "lucide-react";
 
 // Mock lawyer data - in a real app this would be fetched from an API
 const MOCK_LAWYERS = {
@@ -14,16 +15,22 @@ const MOCK_LAWYERS = {
     id: "lawyer1",
     name: "Rajesh Kumar",
     domain: "Corporate Law",
+    city: "Mumbai",
+    experience: 15
   },
   "lawyer2": {
     id: "lawyer2",
     name: "Priya Sharma",
     domain: "Family Law",
+    city: "Delhi",
+    experience: 8
   },
   "lawyer3": {
     id: "lawyer3",
     name: "Avinash Mehta",
     domain: "Criminal Law",
+    city: "Bangalore",
+    experience: 12
   }
 };
 
@@ -37,6 +44,7 @@ const AppointmentPage = () => {
   useEffect(() => {
     // Redirect to login if not authenticated
     if (!isAuthenticated) {
+      toast.error("Please log in to schedule an appointment");
       navigate("/login", { state: { from: `/appointment/${lawyerId}` } });
       return;
     }
@@ -64,7 +72,7 @@ const AppointmentPage = () => {
   if (loading) {
     return (
       <PageLayout>
-        <div className="container py-12">
+        <div className="container py-8 md:py-12">
           <div className="flex items-center justify-center min-h-[60vh]">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent"></div>
           </div>
@@ -76,7 +84,7 @@ const AppointmentPage = () => {
   if (!lawyer) {
     return (
       <PageLayout>
-        <div className="container py-12">
+        <div className="container py-8 md:py-12">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Lawyer Not Found</h1>
             <p className="text-muted-foreground mb-6">
@@ -93,23 +101,49 @@ const AppointmentPage = () => {
   
   return (
     <PageLayout>
-      <div className="container py-12">
+      <div className="container py-8 md:py-12">
         <Button 
           variant="outline" 
-          className="mb-6"
+          className="mb-6 flex items-center gap-2"
           onClick={() => navigate(-1)}
         >
-          ← Back
+          <ArrowLeft className="h-4 w-4" /> Back
         </Button>
         
+        <div className="mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold">Schedule an Appointment</h1>
+          <p className="text-muted-foreground mt-1">
+            Select your preferred date and time to meet with the lawyer
+          </p>
+        </div>
+        
         <Card className="max-w-4xl mx-auto">
-          <CardHeader>
-            <CardTitle className="text-2xl">Schedule an Appointment</CardTitle>
-            <CardDescription>
-              Book a consultation with {lawyer.name}, {lawyer.domain} specialist
+          <CardHeader className="border-b">
+            <CardTitle className="text-xl md:text-2xl">Book a Consultation</CardTitle>
+            <CardDescription className="flex flex-col gap-1 mt-2">
+              <div className="flex items-center gap-2">
+                <span className="font-medium">{lawyer.name}</span>
+                <span className="text-muted-foreground">•</span>
+                <span className="flex items-center gap-1">
+                  <Briefcase className="h-3.5 w-3.5" />
+                  {lawyer.domain}
+                </span>
+              </div>
+              {lawyer.city && (
+                <div className="flex items-center gap-1 text-muted-foreground text-sm">
+                  <MapPin className="h-3.5 w-3.5" />
+                  {lawyer.city}
+                  {lawyer.experience && (
+                    <>
+                      <span>•</span>
+                      <span>{lawyer.experience} years experience</span>
+                    </>
+                  )}
+                </div>
+              )}
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <AppointmentScheduler 
               lawyer={lawyer}
               onSchedule={handleScheduleSuccess}

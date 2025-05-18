@@ -1,34 +1,34 @@
 
-// We can't directly edit Navbar.tsx as it's in the read-only files
-// But we can create a helper component that modifies the site title
-
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const SiteNameUpdater = () => {
-  useEffect(() => {
-    // Find all elements that might contain the site name
-    const titleElements = document.querySelectorAll('.site-title, .brand-name, .navbar-brand, .logo-text');
-    
-    // Update all potential site name elements
-    titleElements.forEach(element => {
-      if (element.textContent?.includes('LegalAI') || 
-          element.textContent?.includes('Legal AI') || 
-          element.textContent?.includes('Legal Connect')) {
-        element.textContent = 'Legal Bharat';
-      }
-    });
-    
-    // Update page title
-    document.title = document.title.replace('LegalAI', 'Legal Bharat');
-    document.title = document.title.replace('Legal AI', 'Legal Bharat');
-    document.title = document.title.replace('Legal Connect', 'Legal Bharat');
-    
-    if (!document.title.includes('Legal Bharat')) {
-      document.title = 'Legal Bharat | ' + document.title;
-    }
-  }, []);
+  const location = useLocation();
   
-  return null;
+  useEffect(() => {
+    // Update the document title based on current route
+    const baseTitle = "Legal Bharat";
+    let pageTitle = baseTitle;
+    
+    const path = location.pathname;
+    if (path !== '/') {
+      const pageName = path.split('/')[1].split('-').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).join(' ');
+      
+      pageTitle = `${pageName} | ${baseTitle}`;
+    }
+    
+    document.title = pageTitle;
+    
+    // Update any site-title elements in the DOM
+    const siteTitleElements = document.querySelectorAll('.site-title');
+    siteTitleElements.forEach(element => {
+      element.textContent = "Legal Bharat";
+    });
+  }, [location]);
+  
+  return null; // This component doesn't render anything
 };
 
 export default SiteNameUpdater;

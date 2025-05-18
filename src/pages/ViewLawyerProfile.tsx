@@ -6,14 +6,16 @@ import LawyerProfile from "@/components/LawyerDetailsProfile";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
-import { getLawyerData, LawyerData } from "@/utils/machineLearningSim";
+import { getLawyerData } from "@/utils/machineLearningSim";
+import { CalendarIcon } from "lucide-react";
 
 const ViewLawyerProfile = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { isAuthenticated, hasScheduledAppointment } = useAuth();
   const [lawyer, setLawyer] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
-  const { isAuthenticated } = useAuth();
+  const [hasAppointment, setHasAppointment] = useState(false);
   
   useEffect(() => {
     if (id) {
@@ -47,6 +49,11 @@ const ViewLawyerProfile = () => {
           };
           
           setLawyer(formattedLawyer);
+          
+          // Check if user has already scheduled an appointment with this lawyer
+          if (isAuthenticated && id) {
+            setHasAppointment(hasScheduledAppointment(id));
+          }
         } else {
           toast.error("Lawyer not found");
           navigate("/find-lawyer");
@@ -54,7 +61,7 @@ const ViewLawyerProfile = () => {
         setLoading(false);
       }, 500); // Simulate network delay
     }
-  }, [id, navigate]);
+  }, [id, navigate, isAuthenticated, hasScheduledAppointment]);
   
   const handleAppointmentClick = () => {
     if (!isAuthenticated) {
@@ -113,7 +120,20 @@ const ViewLawyerProfile = () => {
           <p className="text-muted-foreground">View detailed information and schedule appointments</p>
         </div>
         
-        <LawyerProfile lawyer={lawyer} onScheduleAppointment={handleAppointmentClick} />
+        <LawyerProfile 
+          lawyer={lawyer} 
+          onScheduleAppointment={handleAppointmentClick} 
+          hasAppointment={hasAppointment}
+          appointmentBtnProps={{
+            className: "flex items-center gap-2",
+            children: (
+              <>
+                <CalendarIcon className="h-4 w-4" />
+                {hasAppointment ? "View Appointment" : "Schedule Appointment"}
+              </>
+            )
+          }}
+        />
       </div>
     </PageLayout>
   );

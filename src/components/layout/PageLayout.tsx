@@ -1,6 +1,6 @@
 
 import React from "react";
-import Navbar from "./Navbar";
+import Navbar from "../layout/Navbar";
 import Footer from "./Footer";
 
 interface PageLayoutProps {

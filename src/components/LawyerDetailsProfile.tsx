@@ -27,13 +27,17 @@ interface LawyerProfileProps {
     bar_association?: string;
   };
   onScheduleAppointment: () => void;
+  hasAppointment?: boolean; // Added this property
+  appointmentBtnProps?: { // Added this optional property for button customization
+    className?: string;
+    children?: React.ReactNode;
+  };
 }
 
-const LawyerDetailsProfile = ({ lawyer, onScheduleAppointment }: LawyerProfileProps) => {
+const LawyerDetailsProfile = ({ lawyer, onScheduleAppointment, hasAppointment = false, appointmentBtnProps }: LawyerProfileProps) => {
   const { isAuthenticated, saveLawyer, unsaveLawyer, getSavedLawyers, hasScheduledAppointment } = useAuth();
   
   const isSaved = isAuthenticated && getSavedLawyers().includes(lawyer.id);
-  const hasAppointment = isAuthenticated && hasScheduledAppointment(lawyer.id);
   
   const handleSaveLawyer = () => {
     if (!isAuthenticated) {

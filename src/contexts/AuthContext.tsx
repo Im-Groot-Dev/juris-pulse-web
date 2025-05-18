@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 import { User, Role } from '../types/user';
 import { toast } from "sonner";
 
@@ -6,6 +6,12 @@ import { toast } from "sonner";
 interface UserProfile {
   appointments: AppointmentData[];
   savedLawyers: string[];
+  // Add fields for user profile
+  phone?: string;
+  address?: string;
+  city?: string;
+  bio?: string;
+  profileImage?: string;
 }
 
 export interface AppointmentData {
@@ -38,6 +44,8 @@ interface AuthContextType {
   getUserAppointments: () => AppointmentData[];
   getSavedLawyers: () => string[];
   hasScheduledAppointment: (lawyerId: string) => boolean;
+  updateUserProfile: (data: Partial<UserProfile>) => void;
+  refreshUser: () => void;
 }
 
 export interface LawyerRegistrationData {
@@ -96,7 +104,9 @@ const AuthContext = createContext<AuthContextType>({
   unsaveLawyer: () => {},
   getUserAppointments: () => [],
   getSavedLawyers: () => [],
-  hasScheduledAppointment: () => false
+  hasScheduledAppointment: () => false,
+  updateUserProfile: () => {},
+  refreshUser: () => {}
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -110,8 +120,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Check for existing user session in localStorage on mount
-  React.useEffect(() => {
+  // Function to refresh user from localStorage
+  const refreshUser = useCallback(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       try {
@@ -138,6 +148,32 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
     setLoading(false);
   }, []);
+
+  // Check for existing user session in localStorage on mount
+  React.useEffect(() => {
+    refreshUser();
+  }, [refreshUser]);
+
+  // Function to update user profile
+  const updateUserProfile = (data: Partial<UserProfile>) => {
+    if (!user) {
+      toast.error("You must be logged in to update your profile");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const updatedProfile = { ...userProfile, ...data };
+      setUserProfile(updatedProfile);
+      localStorage.setItem(`profile_${user.id}`, JSON.stringify(updatedProfile));
+      toast.success("Profile updated successfully");
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+      toast.error("Failed to update profile");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const login = async (email: string, password: string) => {
     setLoading(true);
@@ -492,7 +528,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       unsaveLawyer,
       getUserAppointments,
       getSavedLawyers,
-      hasScheduledAppointment
+      hasScheduledAppointment,
+      updateUserProfile,
+      refreshUser
     }}>
       {children}
     </AuthContext.Provider>

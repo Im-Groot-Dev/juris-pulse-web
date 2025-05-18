@@ -1,4 +1,5 @@
 
+import { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { toast } from "sonner";
@@ -9,8 +10,14 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children, role }: ProtectedRouteProps) => {
-  const { isAuthenticated, user, loading } = useAuth();
+  const { isAuthenticated, user, loading, refreshUser } = useAuth();
   const location = useLocation();
+
+  // Add auto-refresh to ensure auth state is current
+  useEffect(() => {
+    // Try to refresh the user state when component mounts
+    refreshUser();
+  }, [refreshUser]);
 
   // Show loading state
   if (loading) {

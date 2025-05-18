@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "@/components/layout/PageLayout";
@@ -9,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import UserAppointments from "@/components/UserAppointments";
+import UserProfile from "@/components/UserProfile";
 
 const UserDashboard = () => {
   const { user, userProfile } = useAuth();
@@ -89,36 +89,7 @@ const UserDashboard = () => {
               </TabsList>
               
               <TabsContent value="profile">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Your Profile</CardTitle>
-                    <CardDescription>View and manage your personal information</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">Full Name</p>
-                        <p>{user?.name}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">Email</p>
-                        <p>{user?.email}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">Member Since</p>
-                        <p>{new Date().toLocaleDateString()}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">Account Type</p>
-                        <p className="capitalize">{user?.role}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="pt-4 flex justify-end">
-                      <Button disabled>Edit Profile</Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                <UserProfile />
               </TabsContent>
               
               <TabsContent value="appointments">

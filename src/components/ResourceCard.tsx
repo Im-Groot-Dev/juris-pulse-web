@@ -58,28 +58,46 @@ const ResourceCard = ({
   };
 
   return (
-    <Card className={`overflow-hidden hover:shadow-lg transition-all ${gradient} border-none h-full flex flex-col`}>
-      <div className="p-6">
-        <div className="flex items-start justify-between">
-          <div className="bg-white/80 backdrop-blur-sm rounded-full p-2 shadow-sm">
-            {getIcon()}
+    <Card className={`overflow-hidden hover:shadow-lg transition-all h-full flex flex-col`}>
+      {image ? (
+        <div className="relative h-48 w-full overflow-hidden">
+          <img 
+            src={image} 
+            alt={title}
+            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105" 
+          />
+          <div className={`absolute inset-0 opacity-60 ${gradient}`} />
+          <div className="absolute top-3 right-3">
+            <Badge variant={getBadgeVariant()} className="capitalize">
+              {type}
+            </Badge>
           </div>
-          <Badge variant={getBadgeVariant()} className="capitalize">
-            {type}
-          </Badge>
         </div>
+      ) : (
+        <div className={`h-48 w-full ${gradient} relative`}>
+          <div className="absolute top-4 left-4">
+            <div className="bg-white/80 backdrop-blur-sm rounded-full p-2 shadow-sm">
+              {getIcon()}
+            </div>
+          </div>
+          <div className="absolute top-3 right-3">
+            <Badge variant={getBadgeVariant()} className="capitalize">
+              {type}
+            </Badge>
+          </div>
+        </div>
+      )}
 
-        <h3 className="mt-4 text-lg font-medium line-clamp-2">
+      <CardContent className="p-5 flex-grow">
+        <h3 className="text-lg font-medium line-clamp-2 mb-2">
           {title}
         </h3>
         
-        <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
+        <p className="text-sm text-muted-foreground line-clamp-3">
           {description}
         </p>
-      </div>
 
-      <CardFooter className="flex-col items-start gap-2 p-6 pt-0 mt-auto">
-        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+        <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
           {date && (
             <div className="flex items-center gap-1">
               <CalendarIcon className="h-3 w-3" />
@@ -93,9 +111,11 @@ const ResourceCard = ({
             </div>
           )}
         </div>
+      </CardContent>
 
+      <CardFooter className="p-5 pt-0 mt-auto border-t">
         <div className="flex justify-between items-center w-full">
-          <Badge variant="outline" className="bg-white/50 backdrop-blur-sm">
+          <Badge variant="outline" className="bg-white/50">
             {category}
           </Badge>
           <Button size="sm" asChild>

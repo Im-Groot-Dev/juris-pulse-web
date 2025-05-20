@@ -16,6 +16,7 @@ const Globe = ({ className = "" }: GlobeProps) => {
 
     // Scene setup
     const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000408); // Deeper space background for better contrast
     
     // Camera setup
     const camera = new THREE.PerspectiveCamera(
@@ -26,14 +27,16 @@ const Globe = ({ className = "" }: GlobeProps) => {
     );
     camera.position.z = 200;
     
-    // Renderer setup with better antialiasing for professional look
+    // Renderer setup with enhanced settings for better visual quality
     const renderer = new THREE.WebGLRenderer({ 
       antialias: true,
-      alpha: true, 
-      precision: "highp"
+      precision: "highp",
+      powerPreference: "high-performance"
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Better performance with capped pixel ratio
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputEncoding = THREE.sRGBEncoding; // Better color reproduction
+    
     containerRef.current.innerHTML = "";
     containerRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
@@ -46,49 +49,57 @@ const Globe = ({ className = "" }: GlobeProps) => {
     controls.enableZoom = false;
     controls.enablePan = false;
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.2; // Slower rotation for more professional look
+    controls.autoRotateSpeed = 0.2; // Slower rotation for more realistic look
     
     // Create Earth with higher detail
     const earthGeometry = new THREE.SphereGeometry(50, 128, 128); // Increased segments for smoother sphere
     
-    // Load enhanced textures
+    // Load enhanced textures with higher resolution
     const textureLoader = new THREE.TextureLoader();
-    const earthTexture = textureLoader.load("/earth-blue-marble.jpg"); // More realistic texture
-    const bumpMap = textureLoader.load("/earth-topology.jpg"); // Improved bump map
-    const specularMap = textureLoader.load("/earth-specular.jpg");
-    const cloudsTexture = textureLoader.load("/earth-clouds.png");
     
-    // Improved Earth material with more realistic colors
+    // Higher quality Earth texture with more vibrant colors
+    const earthTexture = textureLoader.load("/earth-blue-marble.jpg");
+    earthTexture.colorSpace = THREE.SRGBColorSpace; // Enhanced color reproduction
+    
+    // Improved topography map with more contrast
+    const bumpMap = textureLoader.load("/earth-topology.jpg");
+    bumpMap.colorSpace = THREE.SRGBColorSpace;
+    
+    // More defined clouds texture
+    const cloudsTexture = textureLoader.load("/earth-clouds.png");
+    cloudsTexture.colorSpace = THREE.SRGBColorSpace;
+    
+    // Improved Earth material with enhanced realistic colors
     const earthMaterial = new THREE.MeshPhongMaterial({
       map: earthTexture,
       bumpMap: bumpMap,
-      bumpScale: 1.2, // Increase bump scale for more prominent terrain
-      specularMap: specularMap,
-      specular: new THREE.Color(0x224455), // Blue-green tint for oceans
-      shininess: 25, // More reflectivity for water surfaces
+      bumpScale: 2.5, // Increased bump scale for more pronounced terrain
+      specularMap: bumpMap,
+      specular: new THREE.Color(0x336699), // Enhanced blue specular highlights for oceans
+      shininess: 30, // More reflectivity for water surfaces
     });
     
     const earth = new THREE.Mesh(earthGeometry, earthMaterial);
     scene.add(earth);
     
     // Add clouds layer with realistic opacity
-    const cloudsGeometry = new THREE.SphereGeometry(51.5, 128, 128); // Slightly larger for cloud layer
+    const cloudsGeometry = new THREE.SphereGeometry(51.5, 128, 128);
     const cloudsMaterial = new THREE.MeshPhongMaterial({
       map: cloudsTexture,
       transparent: true,
-      opacity: 0.4, // More visible clouds
+      opacity: 0.35, // More visible but still transparent clouds
       side: THREE.DoubleSide,
       depthWrite: false,
     });
     const clouds = new THREE.Mesh(cloudsGeometry, cloudsMaterial);
     scene.add(clouds);
     
-    // Add atmosphere with more realistic glow
+    // Enhanced atmosphere with more realistic blue glow
     const atmosphereGeometry = new THREE.SphereGeometry(55, 128, 128);
     const atmosphereMaterial = new THREE.MeshPhongMaterial({
-      color: 0x0077be, // Deeper ocean blue
+      color: 0x0077ff, // More vibrant blue for atmosphere
       transparent: true,
-      opacity: 0.18,
+      opacity: 0.15,
       side: THREE.BackSide,
     });
     const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
@@ -98,7 +109,7 @@ const Globe = ({ className = "" }: GlobeProps) => {
     const starGeometry = new THREE.BufferGeometry();
     const starMaterial = new THREE.PointsMaterial({
       color: 0xffffff,
-      size: 0.5,
+      size: 0.6,
       transparent: true,
       opacity: 0.8,
     });
@@ -119,18 +130,25 @@ const Globe = ({ className = "" }: GlobeProps) => {
     scene.add(stars);
     
     // Enhanced lighting for realistic earth illumination
-    const ambientLight = new THREE.AmbientLight(0x555555); // Brighter ambient light
+    const ambientLight = new THREE.AmbientLight(0x888888); // Brighter ambient light to see details better
     scene.add(ambientLight);
     
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.4); // Stronger directional light for sunlight effect
+    // Main sunlight - positioned for optimal illumination
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 2.0); // Stronger light for better visibility
     directionalLight.position.set(5, 3, 5);
     scene.add(directionalLight);
     
-    const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.3);
+    // Additional rim light to highlight Earth's edge
+    const rimLight = new THREE.DirectionalLight(0xaaddff, 0.5);
+    rimLight.position.set(-5, 0, -5);
+    scene.add(rimLight);
+    
+    // Hemisphere light for soft color balance
+    const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444477, 0.4);
     scene.add(hemisphereLight);
     
     // Add location markers with colors that stand out against Earth tones
-    const addLocationMarker = (lat: number, lng: number, size = 0.5, color = 0x4ADE80) => {
+    const addLocationMarker = (lat: number, lng: number, size = 0.6, color = 0x4ADE80) => {
       // Convert latitude and longitude to 3D coordinates
       const phi = (90 - lat) * (Math.PI / 180);
       const theta = (lng + 180) * (Math.PI / 180);
@@ -145,7 +163,7 @@ const Globe = ({ className = "" }: GlobeProps) => {
       const markerMaterial = new THREE.MeshBasicMaterial({ 
         color: color,
         transparent: true,
-        opacity: 0.8
+        opacity: 0.9 // More visible markers
       });
       const marker = new THREE.Mesh(markerGeometry, markerMaterial);
       
@@ -169,7 +187,7 @@ const Globe = ({ className = "" }: GlobeProps) => {
       return { marker, pulse };
     };
     
-    // Add more diverse global locations for international legal service impression
+    // Add India and international locations
     const locations = [
       { lat: 28.6139, lng: 77.2090, name: "Delhi" },
       { lat: 19.0760, lng: 72.8777, name: "Mumbai" },
@@ -191,7 +209,7 @@ const Globe = ({ className = "" }: GlobeProps) => {
     ];
     
     const markers = locations.map(loc => 
-      addLocationMarker(loc.lat, loc.lng, 0.5, 0xffcc00) // Brighter yellow for better visibility
+      addLocationMarker(loc.lat, loc.lng, 0.6, 0xffcc00) // Brighter yellow for better visibility
     );
     
     // Create enhanced connection lines between locations
@@ -228,17 +246,17 @@ const Globe = ({ className = "" }: GlobeProps) => {
         const normalized = new THREE.Vector3(x / length, y / length, z / length);
         
         // Push the point slightly above the globe with better curve
-        const elevated = normalized.multiplyScalar(radius + 2 + Math.sin(Math.PI * t) * 6);
+        const elevated = normalized.multiplyScalar(radius + 3 + Math.sin(Math.PI * t) * 6);
         curvePoints.push(elevated);
       }
       
       // Create curve from points with better tube geometry
       const curve = new THREE.CatmullRomCurve3(curvePoints);
-      const geometry = new THREE.TubeGeometry(curve, 128, 0.05, 8, false);
+      const geometry = new THREE.TubeGeometry(curve, 128, 0.08, 8, false); // Thicker lines
       const material = new THREE.MeshBasicMaterial({
-        color: 0xffcc00, // Matching marker color
+        color: 0xffdd44, // Brighter yellow for better visibility
         transparent: true,
-        opacity: 0.4
+        opacity: 0.5
       });
       
       const tube = new THREE.Mesh(geometry, material);

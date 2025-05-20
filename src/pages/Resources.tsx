@@ -6,6 +6,7 @@ import ResourceCard from "@/components/ResourceCard";
 import { Input } from "@/components/ui/input";
 import { Search, FileTextIcon, BookOpenIcon, FileIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 // Full resources data is in ResourceDetail.tsx
 // This is a shortened version for the listing page

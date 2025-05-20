@@ -121,4 +121,9 @@
     background: radial-gradient(circle at center, transparent 30%, var(--background) 100%);
     z-index: 1;
   }
+
+  /* Earth glow effect */
+  .globe-container canvas {
+    filter: drop-shadow(0 0 15px rgba(0, 119, 190, 0.3));
+  }
 }

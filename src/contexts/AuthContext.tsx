@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 import { User, Role } from '../types/user';
 import { toast } from "sonner";
@@ -314,7 +313,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       // Register the lawyer in users
       RegisteredUsers[data.email] = {
         password: data.password,
-        role: "lawyer"
+        role: "lawyer",
+        name: `${data.first_name} ${data.last_name}`
       };
       
       // Save to localStorage

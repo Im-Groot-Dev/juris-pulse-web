@@ -58,7 +58,7 @@ const ResourceCard = ({
   };
 
   return (
-    <Card className={`overflow-hidden hover:shadow-lg transition-all h-full flex flex-col`}>
+    <Card className={`overflow-hidden hover:shadow-lg transition-all h-full flex flex-col card-3d`}>
       {image ? (
         <div className="relative h-48 w-full overflow-hidden">
           <img 

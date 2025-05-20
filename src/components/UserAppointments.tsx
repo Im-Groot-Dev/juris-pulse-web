@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { CalendarIcon, MapPinIcon, ClockIcon, FileTextIcon, ExternalLinkIcon } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,6 +22,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 const UserAppointments = () => {
   const { getUserAppointments, cancelAppointment } = useAuth();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<AppointmentData | null>(null);
   const appointments = getUserAppointments();
@@ -41,6 +42,10 @@ const UserAppointments = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleViewLawyerProfile = (lawyerId: string) => {
+    navigate(`/lawyer/${lawyerId}`);
   };
   
   const formatAppointmentDate = (dateString: string) => {
@@ -102,10 +107,13 @@ const UserAppointments = () => {
                       <div className="flex justify-between items-start">
                         <div>
                           <CardTitle className="text-lg">
-                            <Link to={`/lawyer/${appointment.lawyerId}`} className="hover:underline flex items-center gap-1">
+                            <button 
+                              onClick={() => handleViewLawyerProfile(appointment.lawyerId)}
+                              className="hover:underline flex items-center gap-1"
+                            >
                               {appointment.lawyerName}
                               <ExternalLinkIcon size={14} className="inline text-muted-foreground" />
-                            </Link>
+                            </button>
                           </CardTitle>
                           <CardDescription>{appointment.domain}</CardDescription>
                         </div>
@@ -160,10 +168,13 @@ const UserAppointments = () => {
                       <div className="flex justify-between items-start">
                         <div>
                           <CardTitle className="text-lg">
-                            <Link to={`/lawyer/${appointment.lawyerId}`} className="hover:underline flex items-center gap-1">
+                            <button 
+                              onClick={() => handleViewLawyerProfile(appointment.lawyerId)}
+                              className="hover:underline flex items-center gap-1"
+                            >
                               {appointment.lawyerName}
                               <ExternalLinkIcon size={14} className="inline text-muted-foreground" />
-                            </Link>
+                            </button>
                           </CardTitle>
                           <CardDescription>{appointment.domain}</CardDescription>
                         </div>

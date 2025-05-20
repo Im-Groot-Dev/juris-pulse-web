@@ -8,31 +8,7 @@ import { toast } from "sonner";
 import AppointmentScheduler from "@/components/AppointmentScheduler";
 import { useAuth, AppointmentData } from "@/contexts/AuthContext";
 import { ArrowLeft, Briefcase, MapPin } from "lucide-react";
-
-// Mock lawyer data - in a real app this would be fetched from an API
-const MOCK_LAWYERS = {
-  "lawyer1": {
-    id: "lawyer1",
-    name: "Rajesh Kumar",
-    domain: "Corporate Law",
-    city: "Mumbai",
-    experience: 15
-  },
-  "lawyer2": {
-    id: "lawyer2",
-    name: "Priya Sharma",
-    domain: "Family Law",
-    city: "Delhi",
-    experience: 8
-  },
-  "lawyer3": {
-    id: "lawyer3",
-    name: "Avinash Mehta",
-    domain: "Criminal Law",
-    city: "Bangalore",
-    experience: 12
-  }
-};
+import { getLawyerData } from "@/utils/machineLearningSim";
 
 const AppointmentPage = () => {
   const { lawyerId } = useParams<{ lawyerId: string }>();
@@ -49,16 +25,33 @@ const AppointmentPage = () => {
       return;
     }
     
-    // Simulate API call to get lawyer details
+    // Get lawyer details from the utility function
     if (lawyerId) {
+      setLoading(true);
+      
       setTimeout(() => {
-        const foundLawyer = MOCK_LAWYERS[lawyerId as keyof typeof MOCK_LAWYERS];
+        // Get all lawyers
+        const allLawyers = getLawyerData();
+        
+        // Find the lawyer by ID
+        const foundLawyer = allLawyers.find(lawyer => lawyer.id === lawyerId);
+        
         if (foundLawyer) {
-          setLawyer(foundLawyer);
+          // Format the lawyer data
+          const formattedLawyer = {
+            id: foundLawyer.id,
+            name: `${foundLawyer.first_name} ${foundLawyer.last_name}`,
+            domain: foundLawyer.domain,
+            city: foundLawyer.city,
+            experience: foundLawyer.experience
+          };
+          
+          setLawyer(formattedLawyer);
         } else {
           toast.error("Lawyer not found");
           navigate("/find-lawyer");
         }
+        
         setLoading(false);
       }, 500);
     }
@@ -66,7 +59,7 @@ const AppointmentPage = () => {
   
   const handleScheduleSuccess = (appointmentData: Omit<AppointmentData, 'id'>) => {
     toast.success(`Appointment scheduled successfully with ${lawyer.name}`);
-    navigate("/user-dashboard");
+    navigate("/user-dashboard", { state: { activeTab: "appointments" } });
   };
   
   if (loading) {

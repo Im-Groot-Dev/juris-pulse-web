@@ -70,6 +70,12 @@ const ViewLawyerProfile = () => {
       return;
     }
     
+    // If user already has an appointment, navigate to dashboard
+    if (hasAppointment) {
+      navigate("/user-dashboard", { state: { activeTab: "appointments" } });
+      return;
+    }
+    
     // Navigate to the appointment page
     navigate(`/appointment/${id}`);
   };

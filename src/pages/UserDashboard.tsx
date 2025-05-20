@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import PageLayout from "@/components/layout/PageLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,14 +7,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import UserAppointments from "@/components/UserAppointments";
 import UserProfile from "@/components/UserProfile";
+import SavedLawyers from "@/components/SavedLawyers";
 
 const UserDashboard = () => {
   const { user, userProfile } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState("profile");
+
+  // Set active tab based on navigation state if provided
+  useEffect(() => {
+    if (location.state && location.state.activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+  }, [location.state]);
   
   return (
     <PageLayout>
@@ -97,39 +107,7 @@ const UserDashboard = () => {
               </TabsContent>
               
               <TabsContent value="saved">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Saved Lawyers</CardTitle>
-                    <CardDescription>Your list of saved legal professionals</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {userProfile?.savedLawyers && userProfile.savedLawyers.length > 0 ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* This would show saved lawyers if there were any */}
-                        <Card className="bg-muted/30 p-4">
-                          <p>You have {userProfile?.savedLawyers.length} saved lawyers</p>
-                          <Button 
-                            size="sm" 
-                            variant="outline" 
-                            className="mt-2"
-                            onClick={() => navigate("/find-lawyer")}
-                          >
-                            Browse Lawyers
-                          </Button>
-                        </Card>
-                      </div>
-                    ) : (
-                      <div className="text-center py-8">
-                        <p className="text-muted-foreground mb-4">You haven't saved any lawyers yet</p>
-                        <Button 
-                          onClick={() => navigate("/find-lawyer")}
-                        >
-                          Browse Lawyers
-                        </Button>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                <SavedLawyers />
               </TabsContent>
               
               <TabsContent value="settings">
